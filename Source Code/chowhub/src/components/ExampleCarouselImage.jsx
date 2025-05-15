@@ -5,3 +5,4 @@ export default function ExampleCarouselImage({ src, alt }) {
     </div>
   );
 }
+
