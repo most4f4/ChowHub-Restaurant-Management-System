@@ -9,7 +9,7 @@ jobs:
     name: ESLint
     runs-on: ubuntu-latest
     defaults:
-      runs:
+      run:
         working-directory: ./source code/chowhub/
     steps:
       - name: Checkout code
