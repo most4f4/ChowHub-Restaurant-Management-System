@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./source code/chowhub/
+        working-directory: "./Source Code/chowhub/"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
