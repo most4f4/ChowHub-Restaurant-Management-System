@@ -14,11 +14,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Install Node
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
           cache: "npm"
+          cache-dependency-path: "Source Code/chowhub/package-lock.json"
 
       - name: Install Node packages
         run: npm ci
