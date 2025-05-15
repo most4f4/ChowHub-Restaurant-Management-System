@@ -8,6 +8,9 @@ jobs:
   lint:
     name: ESLint
     runs-on: ubuntu-latest
+    defaults:
+      runs:
+        working-directory: ./source code/chowhub/
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
