@@ -1,27 +1,24 @@
 name: CI
-on: 
+on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 jobs:
   lint:
     name: ESLint
     runs-on: ubuntu-latest
     steps:
-      -name: Install Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: 'lts/*'
-        cache: 'npm'
-      
-      -name: Checkout code
-      uses: actions/checkout@v4
-      
-      -name: Install Node packages
-      run: npm CI
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "npm"
 
-      -name: Run linting
-      run: npm run lint
+      - name: Install Node packages
+        run: npm CI
 
-
+      - name: Run linting
+        run: npm run lint
