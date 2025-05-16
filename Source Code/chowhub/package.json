@@ -6,11 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest -i ",
+    "test:watch": "jest -i --watch",
+    "coverage": "jest --coverage"
   },
   "dependencies": {
     "bootstrap": "^5.3.6",
     "framer-motion": "^12.11.0",
+    "mysql2": "^3.14.1",
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.10",
@@ -21,6 +25,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "eslint-config-prettier": "^10.1.5",
+    "jest": "^29.7.0",
     "prettier": "3.5.3"
   }
 }
