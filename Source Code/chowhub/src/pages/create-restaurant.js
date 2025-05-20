@@ -5,7 +5,7 @@ import { apiFetch } from "@/lib/api";
 import { useState } from "react";
 
 // This page allows a manager to create a new restaurant and their own manager account
-const CreateRestaurant = () => {
+export default function CreateRestaurant() {
   const router = useRouter();
 
   // Holds warning messages to display if something goes wrong (e.g., duplicate email)
@@ -15,12 +15,12 @@ const CreateRestaurant = () => {
   const [formData, setFormData] = useState({
     restaurantName: "",
     restaurantUserName: "",
+    restaurantLocation: "",
     firstName: "",
     lastName: "",
     email: "",
     emergencyContact: "",
     username: "",
-    password: "",
   });
 
   // Update formData state as the user types in input fields
@@ -56,12 +56,12 @@ const CreateRestaurant = () => {
           placeholder="Restaurant User Name"
           onChange={handleChange}
         />
+        <input name="location" placeholder="Restaurant Location" onChange={handleChange} />
         <input name="firstName" placeholder="First Name" onChange={handleChange} />
         <input name="lastName" placeholder="Last Name" onChange={handleChange} />
         <input name="email" placeholder="Manager Email" type="email" onChange={handleChange} />
         <input name="username" placeholder="Username" onChange={handleChange} />
         <input name="emergencyContact" placeholder="Emergency Contact" onChange={handleChange} />
-        <input name="password" placeholder="Password" type="password" onChange={handleChange} />
 
         {warning && <p style={{ color: "red" }}>{warning}</p>}
 
@@ -69,6 +69,4 @@ const CreateRestaurant = () => {
       </form>
     </div>
   );
-};
-
-export default CreateRestaurant;
+}
