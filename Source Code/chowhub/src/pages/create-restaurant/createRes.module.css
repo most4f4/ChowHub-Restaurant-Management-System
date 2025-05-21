@@ -1,0 +1,16 @@
+.formWrapper {
+  max-width: 700px;
+  margin: auto;
+  margin-bottom: 50px;
+}
+
+.registerBtn {
+  width: 15em;
+  font-weight: 500;
+  height: 45px;
+}
+
+.inputLarge {
+  height: 45px;
+  font-size: 1rem;
+}
