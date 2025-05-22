@@ -7,6 +7,8 @@ import { Header } from "../../components/Header";
 import { motion } from "framer-motion";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import styles from "./setupPass.module.css";
+import { toast } from "react-toastify";
+import Top from "../../components/Top";
 
 export default function SetupPasswordPage() {
   const router = useRouter();
@@ -15,7 +17,8 @@ export default function SetupPasswordPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [token, setToken] = useState("");
-  const [error, setError] = useState("");
+  const [tokenError, setTokenError] = useState("");
+  const [submitError, setSubmitError] = useState("");
   const [tokenValid, setTokenValid] = useState(false);
   const [formValidated, setFormValidated] = useState(false);
 
@@ -36,7 +39,7 @@ export default function SetupPasswordPage() {
           setToken(tokenFromURL); // Save token if valid
           setTokenValid(true);
         })
-        .catch(() => setError("Invalid or expired token.")); // Handle invalid token
+        .catch(() => setTokenError("Invalid or expired token."));
     }
   }, [router.query.token]);
 
@@ -56,7 +59,7 @@ export default function SetupPasswordPage() {
     }
 
     try {
-      await apiFetch("/auth/set-password", {
+      const result = await apiFetch("/auth/set-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, password }),
@@ -68,16 +71,18 @@ export default function SetupPasswordPage() {
       // Redirect to login page after successful setup
       router.push("/login");
     } catch (err) {
-      setError("Failed to set password."); // Handle error during password setup
+      console.error("❌ Submit error:", err);
+      setSubmitError("Failed to set password.");
     }
   };
 
   // If token is still being validated or invalid, show feedback
-  //if (!tokenValid) return <p>{error || "Validating..."}</p>;
+  if (!tokenValid) return <p className="text-danger">{tokenError || "Validating token..."}</p>;
 
   // Render password setup form after validation
   return (
     <div>
+      <Top />
       <Header title="🗝️ Set Your Password" image="/images/set-password.jpg" />
 
       <motion.div
@@ -135,7 +140,7 @@ export default function SetupPasswordPage() {
             </Col>
           </Row>
 
-          {error && <p className="text-danger">{error}</p>}
+          {submitError && <p className="text-danger">{submitError}</p>}
 
           <Button variant="success" type="submit" className={`mt-3 ${styles.registerBtn}`}>
             Submit

@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { Header } from "@/components/Header";
 import styles from "./createRes.module.css";
 import { toast } from "react-toastify";
+import Top from "../../components/Top";
 
 // This page allows a manager to create a new restaurant and their own manager account
 export default function CreateRestaurant() {
@@ -66,11 +67,13 @@ export default function CreateRestaurant() {
 
   return (
     <div>
+      <Top />
+
       <Header title="Create Your Restaurant 🍕" image="/images/create-res-header.jpg" />
 
       <motion.div
-        initial={{ opacity: 0, y: 300 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, x: 300 }}
+        whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 1.5 }}
         className="container mt-5"
       >

@@ -1,0 +1,26 @@
+.header {
+  z-index: 1030;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.navLink {
+  color: #0a7222; /* Bootstrap green */
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 1.3rem;
+  transition: color 0.3s ease;
+}
+
+.navLink:hover {
+  color: #1e7e34;
+}
+
+.Btn {
+  background-color: #0a7222;
+  width: 70px;
+}
