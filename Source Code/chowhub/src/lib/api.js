@@ -10,44 +10,46 @@ import { tokenAtom, userAtom } from '@/store/atoms';
 import { toast } from 'react-toastify';
 
 /**
- * A generic helper for making API requests.
- * On a 401 it clears auth state, notifies, and redirects home.
+ * A generic helper function for making API requests to the backend.
+ *
+ * @param {string} path - The API endpoint path (e.g., '/auth/register-manager').
+ * @param {object} options - Fetch options (e.g., method, headers, body).
+ * @returns {Promise<object>} - Returns the parsed JSON response if successful.
+ * @throws {Error} - Throws an error if the response is not OK.
  */
 export const apiFetch = async (path, options = {}) => {
-  const store = getDefaultStore();
-  let token = store.get(tokenAtom);
-
-  // Clean the token by removing any extra quotes or backslashes
-  if (token) {
-    token = token.replace(/["\\]+/g, '');
-  }
-
+  /* Inject JWT token if the user is logged in */
+   const store = getDefaultStore();
+  const token = store.get(tokenAtom);
   const headers = {
     'Content-Type': 'application/json',
     ...(options.headers || {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
   };
 
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
+  const res = await fetch(`${API_BASE}${path}`, { ...options, headers }); // Make the request to the backend
+
+  let result; 
+  try {
+    result = await res.json();   // Parse the JSON response
+  } catch {
+    result = { error: 'Unexpected server error' };
+  }                                      
+
+ //  Avoid duplicate toast on 401
+  if (res.status === 401) {
+    toast.error('Session expired, please log in again.');
+    store.set(tokenAtom, null);
+    store.set(userAtom, null);
+    localStorage.clear();
+    window.location.href = '/login';
+    return;
   }
 
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
-  const result = await res.json();
-
   if (!res.ok) {
-    if (res.status === 401) {
-      // 1) Clear auth in Jotai + localStorage
-      store.set(tokenAtom, null);
-      store.set(userAtom, null);
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      // 2) Notify the user
-      toast.error('Session expired, please log in again.');
-      // 3) Redirect out of dashboard
-      window.location.href = '/login';
-    }
     throw new Error(result.error || 'API Error');
   }
 
+  // Return the parsed response if everything went fine
   return result;
 };

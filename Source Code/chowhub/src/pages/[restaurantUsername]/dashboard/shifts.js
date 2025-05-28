@@ -1,10 +1,10 @@
-import Protected from '@/components/Protected';
+import Protected, { ManagerOnly } from '@/components/Protected';
 import DashboardLayout from '@/components/DashboardLayout';
 import { useAtomValue } from 'jotai';
 import { tokenAtom, userAtom } from '@/store/atoms';
 import { Typography } from '@mui/material';
 
-export default function PageNamePage() {
+export default function ShiftsPage() {
   const user = useAtomValue(userAtom);
   const token = useAtomValue(tokenAtom);
 
@@ -12,11 +12,13 @@ export default function PageNamePage() {
 
   return (
     <Protected>
-      <DashboardLayout>
-        <Typography variant="h5" sx={{ mt: 2 }}>
-          📌 This is the Shifts page.
-        </Typography>
-      </DashboardLayout>
+      <ManagerOnly>
+        <DashboardLayout>
+          <Typography variant="h5" sx={{ mt: 2 }}>
+            📌 This is the Shifts page.
+          </Typography>
+        </DashboardLayout>
+      </ManagerOnly>
     </Protected>
   );
 }

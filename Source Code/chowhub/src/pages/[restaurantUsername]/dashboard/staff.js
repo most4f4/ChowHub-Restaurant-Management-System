@@ -4,7 +4,7 @@ import { useAtomValue } from 'jotai';
 import { tokenAtom, userAtom } from '@/store/atoms';
 import { Typography } from '@mui/material';
 
-export default function IngredientPage() {
+export default function StaffPage() {
   const user = useAtomValue(userAtom);
   const token = useAtomValue(tokenAtom);
 
@@ -15,7 +15,7 @@ export default function IngredientPage() {
       <ManagerOnly>
         <DashboardLayout>
           <Typography variant="h5" sx={{ mt: 2 }}>
-            📌 This is the Ingredient page.
+            📌 This is the Staff page.
           </Typography>
         </DashboardLayout>
       </ManagerOnly>
