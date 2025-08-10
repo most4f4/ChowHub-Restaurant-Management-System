@@ -1,14 +1,71 @@
+/* Container with gradient background */
 .formWrapper {
-  background-color: #1e1e2f;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   color: #ffffff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+/* Subtle animated background pattern */
+.formWrapper::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(64, 255, 218, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(168, 230, 207, 0.1) 0%, transparent 50%);
+  animation: float 20s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(30px, -30px) rotate(120deg);
+  }
+  66% {
+    transform: translate(-20px, 20px) rotate(240deg);
+  }
+}
+
+/* Form content positioned above background */
+.formWrapper > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Enhanced typography */
+.formWrapper h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #64ffda, #a8e6cf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .formWrapper label {
-  color: #bfbfbf;
-  font-weight: 500;
+  color: #e0e6ed;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .formWrapper h6 {
@@ -17,54 +74,251 @@
   font-size: 1rem;
 }
 
-/* Style for all form controls (input, textarea, select) */
+/* Enhanced form controls */
 .formWrapper input,
 .formWrapper textarea,
 .formWrapper select {
-  background-color: #2e2e3e;
-  border: 1px solid #444;
+  background: rgba(46, 46, 62, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.1);
   color: #fff;
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
-/* Focus state for form controls */
+/* Enhanced focus states with smooth animations */
 .formWrapper input:focus,
 .formWrapper textarea:focus,
 .formWrapper select:focus {
   border-color: #64ffda;
-  box-shadow: 0 0 0 0.2rem rgba(100, 255, 218, 0.25);
+  background: rgba(46, 46, 62, 0.95);
+  box-shadow:
+    0 0 0 3px rgba(100, 255, 218, 0.2),
+    0 8px 25px rgba(100, 255, 218, 0.15);
+  transform: translateY(-2px);
+  outline: none;
 }
 
-/* Specific styling for radio buttons to match the theme */
+/* Hover effects for inputs */
+.formWrapper input:hover,
+.formWrapper textarea:hover,
+.formWrapper select:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(46, 46, 62, 0.9);
+}
+
+/* Form groups with better spacing */
+.formWrapper .mb-3 {
+  margin-bottom: 2rem;
+}
+
+/* Enhanced radio button styling */
 .formWrapper .form-check-label {
-  color: #bfbfbf;
+  color: #e0e6ed;
+  font-weight: 500;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
 
-/* Style for the submit button */
+.formWrapper .form-check-input {
+  background-color: rgba(46, 46, 62, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.formWrapper .form-check-input:checked {
+  background-color: #64ffda;
+  border-color: #64ffda;
+  box-shadow: 0 0 10px rgba(100, 255, 218, 0.3);
+}
+
+.formWrapper .form-check-input:focus {
+  box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.2);
+}
+
+.formWrapper .form-check:hover .form-check-label {
+  color: #64ffda;
+}
+
+/* Radio buttons container */
+.formWrapper .d-flex.gap-3 {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Enhanced submit button */
 .formWrapper button {
-  background-color: #036264;
+  background: linear-gradient(135deg, #036264 0%, #51937b 100%);
   color: #ffffff;
   font-weight: 600;
   border: none;
+  padding: 1rem 3rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(3, 98, 100, 0.3);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  margin-top: 1rem;
 }
 
 .formWrapper button:hover {
-  background-color: #51937b;
+  background: linear-gradient(135deg, #51937b 0%, #64ffda 100%);
+  box-shadow: 0 12px 30px rgba(3, 98, 100, 0.4);
+  transform: translateY(-3px);
 }
 
-/* Placeholder styling */
+/* Cancel button specific styles */
+.formWrapper .cancelButton {
+  background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%) !important;
+  box-shadow: 0 8px 20px rgba(108, 117, 125, 0.3) !important;
+}
+
+.formWrapper .cancelButton:hover {
+  background: linear-gradient(135deg, #5a6268 0%, #868e96 100%) !important;
+  box-shadow: 0 12px 30px rgba(108, 117, 125, 0.4) !important;
+  transform: translateY(-3px);
+}
+
+.formWrapper button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(3, 98, 100, 0.3);
+}
+
+/* Button ripple effect */
+.formWrapper button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: all 0.6s ease;
+}
+
+.formWrapper button:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Enhanced placeholder styling */
 .employeeLabel::placeholder {
   color: #aaa;
-  opacity: 1;
+  opacity: 0.7;
+  font-style: italic;
 }
 
-/* Global styles for form controls using :global to override Bootstrap */
+/* Validation states with enhanced styling */
+.formWrapper .is-valid {
+  border-color: #a8e6cf !important;
+  box-shadow: 0 0 0 3px rgba(168, 230, 207, 0.2) !important;
+}
+
+.formWrapper .is-invalid {
+  border-color: #ff6b6b !important;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2) !important;
+}
+
+/* Enhanced feedback text */
+.formWrapper .text-success {
+  color: #a8e6cf !important;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.formWrapper .text-danger {
+  color: #ff6b6b !important;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.formWrapper .text-success::before {
+  content: "✓";
+  background: #a8e6cf;
+  color: #1a1a2e;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.formWrapper .text-danger::before {
+  content: "⚠";
+  color: #ff6b6b;
+  font-size: 16px;
+}
+
+/* Global styles for form controls */
 .formWrapper :global(.form-control),
 .formWrapper :global(.form-select) {
-  background-color: #2e2e3e;
-  border: 1px solid #444;
+  background: rgba(46, 46, 62, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.1);
   color: #fff;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 .formWrapper :global(.form-control::placeholder) {
   color: #aaa;
+  opacity: 0.7;
+}
+
+.formWrapper :global(.form-control:focus),
+.formWrapper :global(.form-select:focus) {
+  background: rgba(46, 46, 62, 0.95);
+  border-color: #64ffda;
+  box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.2);
+}
+
+/* Loading state for submit button */
+.formWrapper button:disabled {
+  background: linear-gradient(135deg, #666 0%, #888 100%);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .formWrapper {
+    padding: 2rem 1.5rem;
+    margin: 1rem;
+    border-radius: 16px;
+  }
+
+  .formWrapper h1 {
+    font-size: 1.8rem;
+  }
+
+  .formWrapper button {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+  }
+}
+
+/* Focus visible for accessibility */
+.formWrapper *:focus-visible {
+  outline: 2px solid #64ffda;
+  outline-offset: 2px;
 }
