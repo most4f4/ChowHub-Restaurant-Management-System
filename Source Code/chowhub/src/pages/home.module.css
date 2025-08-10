@@ -1,0 +1,10 @@
+.homeContainer {
+  overflow-x: hidden;
+  background-color: white;
+}
+
+@media (max-width: 576px) {
+  .homeContainer {
+    margin-top: 0; /* Remove margin since header is no longer fixed */
+  }
+}

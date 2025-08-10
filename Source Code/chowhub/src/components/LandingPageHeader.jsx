@@ -7,7 +7,7 @@ export default function LandingPageHeader() {
   return (
     <div>
       <header>
-        <Carousel className="carousel-fade mt-5 mt-sm-0">
+        <Carousel className="carousel-fade mt-sm-0">
           <Carousel.Item className={`${styles.carouselItem1} vh-100`}>
             <Carousel.Caption className="h-100 pb-0">
               <div className="row h-100">
