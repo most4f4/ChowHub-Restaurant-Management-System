@@ -8,6 +8,7 @@ import SummaryCard from "@/components/SummaryCard";
 import CategoryModal from "@/components/CategoryModal";
 import { Button, Modal, Pagination } from "react-bootstrap";
 import Style from "./menuManage.module.css";
+import DeleteCategoryModal from "@/components/DeleteCategoryModal";
 
 export default function MenuManagementPage() {
   const router = useRouter();
@@ -140,19 +141,6 @@ export default function MenuManagementPage() {
     setDeleteModalOpen(true);
   };
 
-  const handleDeleteCategoryConfirm = async (category) => {
-    setDeleteModalOpen(false);
-    try {
-      await apiFetch(`/categories/${category._id}`, {
-        method: "DELETE",
-      });
-      loadCategories(); // Reload categories list
-      loadItems(); // Reload menu items as category deletion might affect them
-    } catch (err) {
-      console.error("Delete category failed", err);
-    }
-  };
-
   const handleDeleteMenuItem = async () => {
     if (!selectedMenuItem) return;
     setDeleteMenuModalOpen(false);
@@ -164,6 +152,21 @@ export default function MenuManagementPage() {
       loadItems(); // Reload menu items to update the table
     } catch (err) {
       console.error("Delete menu item failed", err);
+    }
+  };
+
+  const handleDeleteCategoryConfirm = async (category) => {
+    try {
+      await apiFetch(`/categories/${category._id}`, {
+        method: "DELETE",
+      });
+      loadCategories(); // Reload categories list
+      loadItems(); // Reload menu items as category deletion might affect them
+    } catch (err) {
+      console.error("Delete category failed", err);
+      // You might want to show an error message to the user here
+      alert("Failed to delete category. Please try again.");
+      throw err; // Re-throw so the modal can handle it
     }
   };
 
@@ -299,6 +302,16 @@ export default function MenuManagementPage() {
               isEditing={isEditing}
             />
           )}
+
+          {/* Delete Category Modal */}
+          <DeleteCategoryModal
+            show={deleteModalOpen}
+            onHide={() => setDeleteModalOpen(false)}
+            category={selectedCategory}
+            categories={categories}
+            onConfirmDelete={handleDeleteCategoryConfirm}
+            style={Style}
+          />
 
           {/* Delete Menu Item Modal */}
           <Modal

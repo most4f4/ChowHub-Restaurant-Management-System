@@ -73,6 +73,22 @@ export default function DataTable({ columns, data, renderActions }) {
                 {columns.map((col) => {
                   const cell = row[col.accessor];
 
+                  if (col.render) {
+                    return (
+                      <td
+                        key={col.accessor}
+                        style={{
+                          padding: "0.75rem 1rem",
+                          textAlign: "left",
+                          color: "#EEE",
+                          fontSize: "0.95rem",
+                        }}
+                      >
+                        {col.render(cell, row)}
+                      </td>
+                    );
+                  }
+
                   // special render for status
                   if (col.accessor === "status") {
                     const bgColor = cell === "Active" ? "#4CAF50" : "#E53935";
