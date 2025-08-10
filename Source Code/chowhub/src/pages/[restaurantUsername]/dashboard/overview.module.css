@@ -1,0 +1,625 @@
+/* Container */
+.container {
+  padding: 1.5rem;
+  color: #fff;
+}
+
+/* Loading */
+.loadingContainer {
+  background-color: #121212;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.loadingContent {
+  text-align: center;
+}
+
+.loadingSpinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #333;
+  border-top: 3px solid #4caf50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 2rem;
+}
+
+.headerMobile {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.headerContent {
+  flex: 1;
+}
+
+.headerTitle {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.headerTitleMobile {
+  font-size: 2rem;
+}
+
+.headerTitleSmall {
+  font-size: 1.8rem;
+}
+
+.headerSubtitle {
+  color: #ccc;
+  margin: 0.5rem 0 0;
+  font-size: 1.1rem;
+}
+
+.headerSubtitleMobile {
+  font-size: 1rem;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: auto;
+}
+
+.headerActionsMobile {
+  gap: 0.5rem;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+.headerActionsSmall {
+  align-items: stretch;
+}
+
+.lastUpdated {
+  color: #888;
+  font-size: 0.9rem;
+  text-align: left;
+  margin-bottom: 0;
+}
+
+.lastUpdatedMobile {
+  font-size: 0.8rem;
+}
+
+.lastUpdatedSmall {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.refreshButton {
+  background-color: #4caf50;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  min-width: 120px;
+}
+
+.refreshButtonMobile {
+  padding: 0.6rem 0.8rem;
+  font-size: 0.9rem;
+  min-width: auto;
+}
+
+/* Summary Card */
+.summaryCard {
+  background-color: #1e1e2f;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+
+.summaryCardClickable {
+  cursor: pointer;
+}
+
+.summaryCardBg {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.summaryCardContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.summaryCardIcon {
+  border-radius: 50%;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.summaryCardInfo {
+  flex: 1;
+}
+
+.summaryCardValue {
+  margin: 0;
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.summaryCardTrend {
+  font-size: 0.8rem;
+}
+
+.summaryCardLabel {
+  margin: 0.25rem 0 0;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.summaryCardSubtext {
+  margin: 0.25rem 0 0;
+  color: #888;
+  font-size: 0.8rem;
+}
+
+/* Grid Layouts */
+.keyMetricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.secondChartsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.staffQuickStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.topStaffGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.quickActionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.alertsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Chart Container */
+.chartContainer {
+  background-color: #1e1e2f;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #3a3a4a;
+}
+
+.chartContent {
+  height: 300px;
+}
+
+.chartContentSmall {
+  height: 250px;
+}
+
+.chartContentTiny {
+  height: 200px;
+}
+
+.chartTitle {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.chartEmpty {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+}
+
+.chartEmptySmall {
+  height: 250px;
+}
+
+.chartEmptyTiny {
+  height: 200px;
+}
+
+/* Quick Action Card */
+.quickActionCard {
+  background-color: #1e1e2f;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #3a3a4a;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.quickActionIcon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.quickActionTitle {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.quickActionDescription {
+  color: #ccc;
+  text-align: center;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Alert Card */
+.alertCard {
+  background-color: #1e1e2f;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.alertCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.alertCardIcon {
+  border-radius: 50%;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.alertCardTitle {
+  margin: 0;
+  color: #fff;
+}
+
+.alertCardBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.alertCardContent {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.alertCardItem {
+  padding: 0.5rem;
+  background-color: #252538;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alertCardItemName {
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.alertCardItemInfo {
+  color: #ccc;
+  font-size: 0.8rem;
+}
+
+.alertCardEmpty {
+  color: #888;
+  text-align: center;
+  margin: 0;
+}
+
+/* Section Cards */
+.sectionCard {
+  background-color: #1e1e2f;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #3a3a4a;
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  margin: 0 0 1rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Top Staff Performance */
+.topStaffCard {
+  background-color: #252538;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.topStaffMedal {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.topStaffName {
+  margin: 0;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.topStaffUsername {
+  margin: 0.25rem 0;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.topStaffStats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 0.5rem;
+}
+
+.topStaffStat {
+  text-align: center;
+}
+
+.topStaffStatValue {
+  margin: 0;
+  font-weight: 600;
+}
+
+.topStaffStatLabel {
+  margin: 0;
+  color: #888;
+  font-size: 0.8rem;
+}
+
+/* Recent Orders */
+.recentOrdersContent {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.recentOrderItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #252538;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  border: 1px solid #3a3a4a;
+}
+
+.recentOrderLeft {
+  display: block;
+}
+
+.recentOrderId {
+  margin: 0;
+  color: #fff;
+  font-weight: 600;
+}
+
+.recentOrderDetails {
+  margin: 0.25rem 0 0;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.recentOrderRight {
+  text-align: right;
+}
+
+.recentOrderTotal {
+  margin: 0;
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.recentOrderStatus {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+/* Unavailable Menu Items */
+.unavailableCard {
+  background-color: #1e1e2f;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid #ff980030;
+  margin-bottom: 2rem;
+}
+
+.unavailableContent {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.unavailableItem {
+  padding: 0.75rem;
+  background-color: #252538;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ff980030;
+}
+
+.unavailableItemName {
+  margin: 0;
+  color: #fff;
+  font-weight: 600;
+}
+
+.unavailableItemMissing {
+  margin: 0.25rem 0 0;
+  color: #ff9800;
+  font-size: 0.8rem;
+}
+
+/* Completed Orders */
+.completedOrdersCard {
+  background-color: #1e1e2f;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #3a3a4a;
+  margin-top: 2rem;
+}
+
+.completedOrdersContent {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.completedOrderItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #252538;
+  border-radius: 6px;
+  border: 1px solid #4caf5030;
+}
+
+.completedOrderItemMobile {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.completedOrderLeft {
+  flex: 1;
+  min-width: 0;
+}
+
+.completedOrderId {
+  color: #fff;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0;
+}
+
+.completedOrderIdMobile {
+  margin-bottom: 0.25rem;
+}
+
+.completedOrderBy {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin-left: 1rem;
+  display: inline;
+}
+
+.completedOrderByMobile {
+  margin-left: 0;
+  display: block;
+}
+
+.completedOrderRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.completedOrderRightSmall {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.completedOrderTotal {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.completedOrderTime {
+  color: #ff9800;
+  font-size: 0.8rem;
+}
+
+.completedOrderTimestamp {
+  color: #888;
+  font-size: 0.8rem;
+}
