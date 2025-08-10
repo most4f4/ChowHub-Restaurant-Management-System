@@ -1,0 +1,170 @@
+/* Main navbar styling */
+.dashboardNavbar {
+  background: #0a0a0f !important;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  padding: 1rem 0;
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Restaurant brand section */
+.restaurantBrand {
+  display: flex !important;
+  align-items: center;
+  gap: 1rem;
+  color: white !important;
+  text-decoration: none !important;
+  padding-left: 2rem;
+}
+
+.restaurantBrand:hover {
+  color: #10b981 !important;
+}
+
+.brandIcon {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.brandInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.restaurantName {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #64ffda;
+}
+
+.roleBadge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+/* User actions section */
+.userActions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-right: 1rem;
+}
+
+/* Welcome message */
+.welcomeMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.welcomeText {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.userName {
+  color: #64ffda;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.1rem;
+}
+
+/* Notification wrapper */
+.notificationWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* User button */
+.userButton {
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border-radius: 50px !important;
+  padding: 0.5rem 1rem !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(10px);
+}
+
+.userButton:hover {
+  background: rgba(100, 255, 218, 0.1) !important;
+  border-color: #64ffda !important;
+  color: #64ffda !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(100, 255, 218, 0.2);
+}
+
+.userButton:focus {
+  box-shadow: 0 0 0 0.2rem rgba(100, 255, 218, 0.25) !important;
+}
+
+.userButtonContent {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.userButtonText {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .restaurantBrand {
+    padding-left: 1rem;
+  }
+
+  .brandInfo {
+    display: block;
+  }
+
+  .restaurantName {
+    font-size: 1.1rem;
+  }
+
+  .welcomeMessage {
+    display: none;
+  }
+
+  .userActions {
+    gap: 1rem;
+    padding-right: 0.5rem;
+  }
+
+  .userButtonText {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboardNavbar {
+    padding: 0.75rem 0;
+  }
+
+  .brandIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .userButton {
+    padding: 0.4rem 0.8rem !important;
+  }
+}

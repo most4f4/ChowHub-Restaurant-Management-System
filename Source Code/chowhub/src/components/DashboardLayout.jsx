@@ -18,41 +18,86 @@ import {
   FiMenu,
   FiX,
   FiLogOut,
-  FiHash,
-  FiMapPin,
-  FiEdit2,
   FiBell,
   FiSettings,
+  FiChevronLeft,
+  FiChevronRight,
 } from "react-icons/fi";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
+import styles from "./DashboardLayout.module.css";
 
 const NAV_ITEMS = [
-  { label: "Overview", icon: <FiHome />, path: "" },
-  { label: "Ordering", icon: <FiShoppingCart />, path: "ordering" },
-  { label: "Menu", icon: <FiBook />, path: "menu-management", managerOnly: true },
-  { label: "Ingredients", icon: <FiBox />, path: "ingredient-management", managerOnly: true },
-  { label: "Suppliers", icon: <FiUsers />, path: "supplier-management", managerOnly: true },
-  { label: "Sales & Analytics", icon: <FiBarChart2 />, path: "sales-analytics", managerOnly: true },
-  { label: "Users", icon: <FiUserCheck />, path: "user-management", managerOnly: true },
-  { label: "Settings", icon: <FiSettings />, path: "restaurant-settings", managerOnly: true },
-  { label: "Notifications", icon: <FiBell />, path: "notification-history" },
+  { label: "Overview", icon: <FiHome />, path: "", color: "#667eea" },
+  { label: "Ordering", icon: <FiShoppingCart />, path: "ordering", color: "#f093fb" },
+  { label: "Menu", icon: <FiBook />, path: "menu-management", managerOnly: true, color: "#4facfe" },
+  {
+    label: "Ingredients",
+    icon: <FiBox />,
+    path: "ingredient-management",
+    managerOnly: true,
+    color: "#43e97b",
+  },
+  {
+    label: "Suppliers",
+    icon: <FiUsers />,
+    path: "supplier-management",
+    managerOnly: true,
+    color: "#fa709a",
+  },
+  {
+    label: "Sales & Analytics",
+    icon: <FiBarChart2 />,
+    path: "sales-analytics",
+    managerOnly: true,
+    color: "#ffecd2",
+  },
+  {
+    label: "Users",
+    icon: <FiUserCheck />,
+    path: "user-management",
+    managerOnly: true,
+    color: "#a8edea",
+  },
+  {
+    label: "Settings",
+    icon: <FiSettings />,
+    path: "restaurant-settings",
+    managerOnly: true,
+    color: "#d299c2",
+  },
+  { label: "Notifications", icon: <FiBell />, path: "notification-history", color: "#fbc2eb" },
 ];
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
   const { restaurantUsername } = router.query;
   const [collapsed, setCollapsed] = useState(false);
-  const sidebarWidth = collapsed ? 60 : 240;
+  const sidebarWidth = collapsed ? 80 : 280;
+
   const currentPath = useMemo(() => {
     const parts = router.asPath.split("/");
-    return parts[parts.length - 1] || "";
+    const dashboardIndex = parts.findIndex((part) => part === "dashboard");
+
+    if (dashboardIndex === -1) {
+      return ""; // Not on dashboard
+    }
+
+    // Get the main route after dashboard
+    const mainRoute = parts[dashboardIndex + 1];
+
+    // If there's no route after dashboard, or it's empty, return empty string for overview
+    return mainRoute || "";
   }, [router.asPath]);
 
+  // Get user data from Jotai atom, use useAtomValue to access the user atom value
   const user = useAtomValue(userAtom);
   const isManager = user?.role === "manager";
+
+  // Filter navigation tabs based on user role
   const tabs = useMemo(() => NAV_ITEMS.filter((tab) => !tab.managerOnly || isManager), [isManager]);
 
+  // Get Jotai setters for user and token
   const setToken = useSetAtom(tokenAtom);
   const setUser = useSetAtom(userAtom);
 
@@ -68,7 +113,6 @@ export default function DashboardLayout({ children }) {
   const [showEdit, setShowEdit] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
-
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -120,37 +164,6 @@ export default function DashboardLayout({ children }) {
     fetchData();
   }, [user]);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/restaurant/${user.restaurantId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(form),
-        },
-      );
-
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Failed to update");
-      toast.success("✅ Restaurant profile updated");
-      setShowEdit(false);
-    } catch (err) {
-      toast.error(err.message || "Update failed");
-    } finally {
-      setSaving(false);
-    }
-  };
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -159,41 +172,15 @@ export default function DashboardLayout({ children }) {
     router.replace("/login");
   };
 
+  // Loading states with spinner
   if (!mounted || loading) {
     return (
-      <div
-        style={{
-          backgroundColor: "#121212",
-          minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          color: "#FFF",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <div
-            style={{
-              width: "50px",
-              height: "50px",
-              border: "3px solid #333",
-              borderTop: "3px solid #4CAF50",
-              borderRadius: "50%",
-              animation: "spin 1s linear infinite",
-              margin: "0 auto 1rem",
-            }}
-          />
-          <p>Loading Dashboard...</p>
-          <style jsx>{`
-            @keyframes spin {
-              0% {
-                transform: rotate(0deg);
-              }
-              100% {
-                transform: rotate(360deg);
-              }
-            }
-          `}</style>
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingContent}>
+          <Spinner animation="border" role="status" className={styles.customSpinner}>
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <p className={styles.loadingTitle}>Loading Dashboard...</p>
         </div>
       </div>
     );
@@ -201,174 +188,83 @@ export default function DashboardLayout({ children }) {
 
   return (
     <Protected>
-      <div style={{ display: "flex", height: "100vh" }}>
-        {/* Sidebar */}
+      <div className={styles.dashboardContainer}>
+        {/* Enhanced Sidebar */}
         <div
-          style={{
-            width: sidebarWidth,
-            backgroundColor: "#1E1E2F",
-            color: "#FFF",
-            transition: "width 0.2s",
-            overflow: "hidden",
-          }}
+          className={`${styles.sidebar} ${collapsed ? styles.sidebarCollapsed : ""}`}
+          style={{ width: sidebarWidth }}
         >
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              margin: "1rem",
-              background: "none",
-              border: "none",
-              color: "#FFF",
-              fontSize: "1.5rem",
-              cursor: "pointer",
-            }}
-          >
-            {collapsed ? <FiMenu /> : <FiX />}
-          </button>
-          <ul style={{ listStyle: "none", padding: 0, marginTop: "1rem" }}>
-            {tabs.map(({ label, icon, path }) => {
+          {/* Sidebar Header */}
+          <div className={styles.sidebarHeader}>
+            <button onClick={() => setCollapsed(!collapsed)} className={styles.collapseButton}>
+              {collapsed ? <FiChevronRight size={20} /> : <FiChevronLeft size={20} />}
+            </button>
+
+            {!collapsed && (
+              <div className={styles.sidebarBrand}>
+                <div className={styles.sidebarBrandIcon}>
+                  <FiHome size={20} />
+                </div>
+                <span className={styles.sidebarBrandText}>ChowHub</span>
+              </div>
+            )}
+          </div>
+
+          {/* Navigation Items */}
+          <nav className={styles.sidebarNav}>
+            {tabs.map(({ label, icon, path, color }) => {
               const selected = currentPath === path;
               return (
-                <li key={path} style={{ margin: "0.5rem 0" }}>
+                <div key={path} className={styles.navItemWrapper}>
                   <Link
                     href={`/${restaurantUsername}/dashboard${path ? "/" + path : ""}`}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      textDecoration: "none",
-                      color: selected ? "#FFF" : "rgba(255,255,255,0.6)",
-                      padding: "0.75rem 1rem",
-                      fontWeight: selected ? 600 : 500,
-                      fontSize: "0.95rem",
-                    }}
+                    className={`${styles.navItem} ${selected ? styles.navItemSelected : ""}`}
                   >
-                    <span style={{ marginRight: collapsed ? 0 : 12, fontSize: "1.2rem" }}>
+                    <div
+                      className={styles.navItemIcon}
+                      style={{
+                        background: selected
+                          ? `linear-gradient(135deg, ${color}, ${color}dd)`
+                          : "rgba(255, 255, 255, 0.1)",
+                      }}
+                    >
                       {icon}
-                    </span>
-                    {!collapsed && <span>{label}</span>}
+                    </div>
+                    {!collapsed && (
+                      <>
+                        <span className={styles.navItemLabel}>{label}</span>
+                        {selected && <div className={styles.navItemIndicator} />}
+                      </>
+                    )}
                   </Link>
-                </li>
+
+                  {/* Tooltip for collapsed state */}
+                  {collapsed && <div className={styles.navItemTooltip}>{label}</div>}
+                </div>
               );
             })}
-            <li style={{ margin: "0.5rem 0" }}>
-              <button
-                onClick={handleLogout}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  width: "100%",
-                  background: "none",
-                  border: "none",
-                  color: "rgba(255,255,255,0.6)",
-                  padding: "0.75rem 1rem",
-                  cursor: "pointer",
-                  fontWeight: 500,
-                  fontSize: "0.95rem",
-                }}
-              >
-                <span style={{ marginRight: collapsed ? 0 : 12, fontSize: "1.2rem" }}>
-                  <FiLogOut />
-                </span>
-                {!collapsed && <span>Logout</span>}
-              </button>
-            </li>
-          </ul>
+          </nav>
+
+          {/* Logout Button */}
+          <div className={styles.sidebarFooter}>
+            <button
+              onClick={handleLogout}
+              className={styles.logoutButton}
+              title={collapsed ? "Logout" : undefined}
+            >
+              <div className={styles.logoutButtonIcon}>
+                <FiLogOut size={18} />
+              </div>
+              {!collapsed && <span className={styles.logoutButtonText}>Logout</span>}
+            </button>
+          </div>
         </div>
 
-        {/* Main Content */}
-        <div
-          style={{
-            flexGrow: 1,
-            backgroundColor: "#121212",
-            color: "#FFF",
-            padding: "1.5rem",
-            overflowY: "auto",
-          }}
-        >
+        {/* Main Content Area */}
+        <div className={styles.mainContent}>
           <DashboardHeader />
 
-          {/* Settings dashboard commented out and moved to settings page */}
-          {/* {router.pathname.endsWith("/dashboard") && restaurant && (
-            <div
-              style={{
-                backgroundColor: "#1E1E2F",
-                padding: "1rem 1.5rem",
-                borderRadius: "8px",
-                marginBottom: "2rem",
-              }}
-            >
-              <div className="d-flex justify-content-between align-items-start">
-                <div>
-                  <h5 className="d-flex align-items-center gap-2">
-                    <FiHome /> {form.name}
-                  </h5>
-                  <p>
-                    <FiHash /> <strong>Username:</strong> {form.username}
-                  </p>
-                  <p>
-                    <FiMapPin /> <strong>Location:</strong> {form.location || "—"}
-                  </p>
-                </div>
-                {isManager && (
-                  <Button
-                    variant="outline-light"
-                    size="sm"
-                    onClick={() => setShowEdit((prev) => !prev)}
-                    title="Edit Restaurant Info"
-                  >
-                    <FiEdit2 />
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
-
-          {router.pathname.endsWith("/dashboard") && isManager && showEdit && (
-            <Form onSubmit={handleSubmit} style={{ maxWidth: 600 }}>
-              <Form.Group className="mb-3" controlId="formName">
-                <Form.Label>Restaurant Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  required
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="formUsername">
-                <Form.Label>Restaurant Username</Form.Label>
-                <Form.Control
-                  type="text"
-                  required
-                  name="username"
-                  value={form.username}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="formLocation">
-                <Form.Label>Location</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="location"
-                  value={form.location}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Button type="submit" disabled={saving}>
-                {saving ? "Saving..." : "Save Changes"}
-              </Button>
-              <Button
-                variant="secondary"
-                className="ms-2"
-                onClick={() => setShowEdit(false)}
-                disabled={saving}
-              >
-                Cancel
-              </Button>
-            </Form>
-          )} */}
-
-          {children}
+          <div className={styles.contentWrapper}>{children}</div>
         </div>
       </div>
     </Protected>

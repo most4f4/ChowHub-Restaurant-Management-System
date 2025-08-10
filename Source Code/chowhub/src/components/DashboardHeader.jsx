@@ -1,45 +1,56 @@
 import { useAtomValue } from "jotai";
 import { userAtom } from "@/store/atoms";
-import { Container, Navbar, Button, Nav } from "react-bootstrap";
+import { Container, Navbar, Button, Nav, Badge } from "react-bootstrap";
+import { FiUser, FiHome } from "react-icons/fi";
 import NotificationBell from "./NotificationBell";
+import styles from "./dashboardHeader.module.css";
 
 export default function DashboardHeader() {
   const user = useAtomValue(userAtom);
 
   return (
-    <>
-      <Navbar data-bs-theme="dark">
-        <Container>
-          <Navbar.Brand style={{ paddingLeft: "2rem" }}>
-            {user?.restaurantName || "Restaurant Name"}
-          </Navbar.Brand>
-        </Container>
-        <Container className="justify-content-end">
-          <Nav className="gap-3 align-items-center">
-            {/* 👋 Welcome message */}
-            <span style={{ color: "#fff", fontWeight: 500 }}>
-              Welcome, {user?.firstName || "User"}
-            </span>
-
-            {/* 🔔 Notification bell */}
-            <NotificationBell />
-
-            {/* 👤 User icon */}
-            <Button variant="outline-light">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                className="bi bi-person"
-                viewBox="0 0 16 16"
+    <Navbar className={styles.dashboardNavbar}>
+      <Container fluid>
+        {/* Restaurant Brand Section */}
+        <Navbar.Brand className={styles.restaurantBrand}>
+          {/* <div className={styles.brandIcon}>
+            <FiHome size={20} />
+          </div> */}
+          <div className={styles.brandInfo}>
+            <h5 className={styles.restaurantName}>{user?.restaurantName || "Restaurant Name"}</h5>
+            {user?.role && (
+              <Badge
+                bg={user.role === "manager" ? "primary" : "secondary"}
+                className={styles.roleBadge}
               >
-                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
-              </svg>
-            </Button>
-          </Nav>
-        </Container>
-      </Navbar>
-    </>
+                {user.role === "manager" ? "👔 Manager" : "👥 Staff"}
+              </Badge>
+            )}
+          </div>
+        </Navbar.Brand>
+
+        {/* User Actions Section */}
+        <Nav className={styles.userActions}>
+          {/* Welcome Message */}
+          <div className={styles.welcomeMessage}>
+            <span className={styles.welcomeText}>Welcome back,</span>
+            <span className={styles.userName}>{user?.firstName || "User"}! 👋</span>
+          </div>
+
+          {/* Notification Bell */}
+          <div className={styles.notificationWrapper}>
+            <NotificationBell />
+          </div>
+
+          {/* User Profile Button */}
+          <Button variant="outline-light" className={styles.userButton}>
+            <div className={styles.userButtonContent}>
+              <FiUser size={16} />
+              <span className={styles.userButtonText}>{user?.firstName?.[0] || "U"}</span>
+            </div>
+          </Button>
+        </Nav>
+      </Container>
+    </Navbar>
   );
 }
