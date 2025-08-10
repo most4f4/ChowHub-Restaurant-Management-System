@@ -1,0 +1,290 @@
+/* Container Styles */
+.container {
+  padding: 2rem;
+  min-width: 0;
+}
+
+.backButtonContainer {
+  margin-bottom: 2rem;
+}
+
+.pageTitle {
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+/* Scroll Container */
+.scrollWrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.scrollContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 1rem 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  max-width: 100%;
+}
+
+.scrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* Order Card Styles */
+.orderCard {
+  background: #3a3a4a;
+  color: #eaeaea;
+  font-family: "Patrick Hand", cursive;
+  width: 300px;
+  min-height: 500px;
+  padding: 2rem 1.5rem 1.5rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  transform-origin: center left;
+}
+
+.orderCard:hover {
+  transform: scale(1.02);
+}
+
+/* Dynamic border color will be applied via style prop */
+.orderCardGreen {
+  border: 2px solid #4caf50;
+  box-shadow: 0 0 12px #4caf50;
+}
+
+.orderCardYellow {
+  border: 2px solid #ffb74d;
+  box-shadow: 0 0 12px #ffb74d;
+}
+
+.orderCardOrange {
+  border: 2px solid #ff8a65;
+  box-shadow: 0 0 12px #ff8a65;
+}
+
+.orderCardRed {
+  border: 2px solid #ff7043;
+  box-shadow: 0 0 12px #ff7043;
+}
+
+.orderCardCritical {
+  border: 2px solid #e53935;
+  box-shadow: 0 0 12px #e53935;
+}
+
+/* Pin Icon */
+.pinIcon {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-15deg);
+  background-color: #c62828;
+  color: #fff;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+/* Order Content */
+.orderContent {
+  flex: 1;
+}
+
+.orderHeader {
+  margin-bottom: 0.75rem;
+}
+
+.orderTitle {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.orderMeta {
+  font-size: 1.05rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+.divider {
+  border-top: 1px dashed #888;
+  margin: 0.5rem 0;
+}
+
+.orderItems {
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.orderItem {
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.itemVariation {
+  font-weight: 400;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.orderComment {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* Order Footer */
+.orderFooter {
+  margin-top: 1.2rem;
+  font-size: 1rem;
+}
+
+.orderTotals {
+  margin-bottom: 0.5rem;
+}
+
+.orderActions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* Action Buttons */
+.actionButton {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-family: "Patrick Hand", cursive;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.cancelButton {
+  background: #d9534f;
+}
+
+.cancelButton:hover {
+  background: #c9302c;
+}
+
+.fulfillButton {
+  background: #5cb85c;
+  padding: 6px 18px;
+}
+
+.fulfillButton:hover {
+  background: #4cae4c;
+}
+
+/* Navigation Arrows */
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #444;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: background 0.2s;
+  z-index: 10;
+}
+
+.navButton:hover {
+  background: #555;
+}
+
+.leftArrow {
+  left: 10px;
+}
+
+.rightArrow {
+  right: 10px;
+}
+
+/* Modal Styles */
+.modalContent {
+  background-color: #2a2a3a !important;
+  color: #ccc !important;
+  border: 1px solid #666 !important;
+}
+
+.modalHeader {
+  background-color: #2a2a3a !important;
+  color: #ccc !important;
+  border-bottom: 1px solid #666 !important;
+}
+
+.modalBody {
+  background-color: #2a2a3a !important;
+  color: #ccc !important;
+}
+
+.modalFooter {
+  background-color: #2a2a3a !important;
+  border-top: 1px solid #666 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  .orderCard {
+    width: 280px;
+    padding: 1.5rem 1rem 1rem;
+  }
+
+  .scrollContainer {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .orderCard {
+    width: 260px;
+    min-height: 450px;
+  }
+
+  .orderTitle {
+    font-size: 1.1rem;
+  }
+
+  .orderMeta {
+    font-size: 1rem;
+  }
+
+  .orderItems {
+    font-size: 1rem;
+  }
+}
