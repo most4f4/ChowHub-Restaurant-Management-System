@@ -1,5 +1,6 @@
-/* Enhanced Create Ingredient Styles */
+/* Edit Ingredient Page Styles */
 .container {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   min-height: 100vh;
   padding: 2rem;
   color: #fff;
@@ -101,95 +102,6 @@
   display: block;
 }
 
-/* Search Section */
-.searchSection {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.searchLabel {
-  color: #4dabf7 !important;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.searchIcon {
-  font-size: 1.2rem;
-}
-
-.searchInput {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  border-radius: 8px !important;
-  color: #fff !important;
-  padding: 0.75rem 1rem !important;
-  font-size: 1rem !important;
-  transition: all 0.3s ease !important;
-  width: 100%;
-}
-
-.searchInput:focus {
-  background: rgba(255, 255, 255, 0.12) !important;
-  border-color: #4dabf7 !important;
-  box-shadow: 0 0 0 0.2rem rgba(77, 171, 247, 0.25) !important;
-  color: #fff !important;
-}
-
-.searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.5) !important;
-}
-
-/* Suggestions */
-.suggestionsList {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-top: 0.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.suggestionsListItem {
-  background: transparent;
-  color: #fff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.suggestionsListItem:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateX(4px);
-}
-
-.suggestionsListItem:last-child {
-  border-bottom: none;
-}
-
-.suggestionImage {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.suggestionName {
-  font-weight: 500;
-  color: #fff;
-}
-
 /* Form Sections */
 .formSection {
   background: rgba(255, 255, 255, 0.03);
@@ -213,6 +125,45 @@
   font-size: 1.2rem;
 }
 
+/* Image Preview Section */
+.imagePreviewSection {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.imagePreview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.currentImage {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.currentImage:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+}
+
+.imageLabel {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+}
+
 /* Input Groups */
 .inputRow {
   display: grid;
@@ -222,13 +173,6 @@
 }
 
 /* File Upload */
-.fileUpload {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
 .fileUploadInput {
   background: rgba(255, 255, 255, 0.08) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -266,7 +210,15 @@
 }
 
 /* Buttons */
-.submitButton {
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.updateButton {
   background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%) !important;
   border: none !important;
   border-radius: 8px !important;
@@ -276,27 +228,21 @@
   font-size: 1rem !important;
   transition: all 0.3s ease !important;
   box-shadow: 0 4px 12px rgba(77, 171, 247, 0.3);
-  width: 100%;
-  margin-top: 1rem;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
 }
 
-.submitButton:hover {
+.updateButton:hover {
   background: linear-gradient(135deg, #339af0 0%, #228be6 100%) !important;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(77, 171, 247, 0.4) !important;
   color: #fff !important;
 }
 
-.submitButton:active {
+.updateButton:active {
   transform: translateY(0) !important;
   box-shadow: 0 2px 8px rgba(77, 171, 247, 0.3) !important;
-}
-
-.buttonGroup {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  margin-top: 2rem;
 }
 
 .cancelButton {
@@ -307,24 +253,28 @@
   color: #fff !important;
   font-weight: 600 !important;
   transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
 }
 
 .cancelButton:hover {
   background: rgba(255, 255, 255, 0.2) !important;
   border-color: rgba(255, 255, 255, 0.4) !important;
   color: #fff !important;
+  transform: translateY(-1px);
 }
 
-/* Preview Section */
-.previewSection {
+/* Progress Section */
+.progressSection {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 1.5rem;
-  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.previewTitle {
+.progressTitle {
   color: #4dabf7;
   font-size: 1.1rem;
   font-weight: 600;
@@ -334,38 +284,93 @@
   gap: 0.5rem;
 }
 
-.previewContent {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1rem;
-  align-items: center;
-}
-
-.previewImage {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.previewDetails {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.previewItem {
+.progressSteps {
   display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.progressStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.stepNumber {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.stepNumber.active {
+  background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%);
+  border-color: #4dabf7;
+  color: #fff;
+}
+
+.stepLabel {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
+.stepLabel.active {
+  color: #4dabf7;
+  font-weight: 600;
+}
+
+/* Changes Summary */
+.changesSummary {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.summaryTitle {
+  color: #4dabf7;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.previewLabel {
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.summaryItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.summaryLabel {
   color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
-  min-width: 80px;
 }
 
-.previewValue {
+.summaryValue {
   color: #fff;
   font-weight: 600;
 }
@@ -392,13 +397,19 @@
     flex-direction: column;
   }
 
-  .submitButton {
+  .updateButton,
+  .cancelButton {
     width: 100%;
+    justify-content: center !important;
   }
 
-  .previewContent {
+  .progressSteps {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .summaryGrid {
     grid-template-columns: 1fr;
-    text-align: center;
   }
 }
 
@@ -411,87 +422,57 @@
     padding: 1rem;
   }
 
-  .searchSection,
   .formSection,
-  .previewSection {
+  .imagePreviewSection,
+  .progressSection,
+  .changesSummary {
     padding: 1rem;
+  }
+
+  .currentImage {
+    width: 100px;
+    height: 100px;
   }
 }
 
 /* Accessibility */
-.submitButton:focus,
+.updateButton:focus,
 .cancelButton:focus {
   outline: 2px solid #4dabf7;
   outline-offset: 2px;
 }
 
-.submitButton:focus:not(:focus-visible),
+.updateButton:focus:not(:focus-visible),
 .cancelButton:focus:not(:focus-visible) {
   outline: none;
-}
-
-/* Button container for multiple buttons */
-.buttonContainer {
-  display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
-}
-
-.buttonContainer .btn {
-  flex: 1;
-  min-width: 150px;
-}
-
-.buttonContainer .btn {
-  flex: 1;
-  min-width: 150px;
-}
-
-.cancelButton {
-  background: rgba(255, 255, 255, 0.1) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  border-radius: 8px !important;
-  padding: 0.75rem 1.5rem !important;
-  color: #fff !important;
-  font-weight: 600 !important;
-  transition: all 0.3s ease !important;
-  flex: 1 !important;
-  min-width: 150px !important;
-}
-
-.cancelButton:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
-  color: #fff !important;
-  transform: translateY(-2px);
 }
 
 /* High contrast mode */
 @media (prefers-contrast: high) {
   .formWrapper,
-  .searchSection,
-  .formSection {
+  .formSection,
+  .imagePreviewSection {
     border: 2px solid rgba(255, 255, 255, 0.3);
   }
 
   .formControl,
   .formSelect,
-  .searchInput {
+  .fileUploadInput {
     border: 2px solid rgba(255, 255, 255, 0.3) !important;
   }
 }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .submitButton,
+  .updateButton,
   .cancelButton,
-  .suggestionsListItem {
+  .currentImage {
     transition: none;
   }
 
-  .submitButton:hover,
-  .suggestionsListItem:hover {
+  .updateButton:hover,
+  .cancelButton:hover,
+  .currentImage:hover {
     transform: none;
   }
 }
@@ -509,8 +490,7 @@
     box-shadow: none;
   }
 
-  .submitButton,
-  .searchSection {
+  .buttonGroup {
     display: none;
   }
 }
