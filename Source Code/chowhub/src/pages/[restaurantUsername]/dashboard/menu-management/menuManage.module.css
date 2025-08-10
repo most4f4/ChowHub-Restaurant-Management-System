@@ -1,18 +1,343 @@
+/* Modal Styles */
 .modalContent {
-  background-color: #2A2A3A; 
-  color: white; 
-  padding: 1.5rem;
-  border-radius: 8px;
+  background-color: #2a2a3a !important;
+  color: white !important;
+  padding: 1.5rem !important;
+  border-radius: 12px !important;
   width: 400px;
   max-width: 90%;
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 10px;
-  border:none
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
+  border: none !important;
 }
 
-.modalBody{
-    border:none
+.modalBody {
+  border: none !important;
+  color: #e0e0e0 !important;
 }
+
 .modalHeader,
 .modalFooter {
   border: none !important;
+  background: transparent !important;
+}
+
+.modalHeader {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.modalFooter {
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Page Layout */
+.pageContainer {
+  padding: 2rem;
+}
+
+.pageTitle {
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.mainContent {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0;
+  gap: 2rem;
+}
+
+.categoriesSection {
+  flex: 1.5;
+  background: linear-gradient(135deg, rgba(30, 30, 47, 0.9) 0%, rgba(42, 42, 58, 0.9) 100%);
+  padding: 2rem;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.summarySection {
+  flex: 1;
+}
+
+.sectionTitle {
+  color: #fff;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Category Table */
+.categoryTable {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.categoryTableHeader {
+  background: linear-gradient(135deg, rgba(100, 255, 218, 0.1) 0%, rgba(168, 230, 175, 0.1) 100%);
+  border-bottom: 1px solid rgba(100, 255, 218, 0.3);
+}
+
+.categoryTableHeaderCell {
+  text-align: left;
+  padding: 1rem;
+  color: #64ffda;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.categoryTableHeaderCellRight {
+  text-align: right;
+  padding: 1rem;
+  color: #64ffda;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.categoryTableRow {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.categoryTableRow:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.categoryTableCell {
+  color: #fff;
+  padding: 1rem;
+  font-size: 1rem;
+}
+
+.categoryTableCellRight {
+  text-align: right;
+  padding: 1rem;
+}
+
+.categoryActionButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64ffda;
+  margin-left: 1rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.categoryActionButton:hover {
+  background: rgba(100, 255, 218, 0.1);
+  transform: translateY(-1px);
+}
+
+.deleteButton {
+  color: #ff6b6b;
+}
+
+.deleteButton:hover {
+  background: rgba(255, 107, 107, 0.1);
+  color: #ff8a80;
+}
+
+.addCategoryButton {
+  margin-top: 1.5rem;
+  background: linear-gradient(135deg, #0f2e01 0%, #09573a 100%);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.addCategoryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(67, 233, 123, 0.3);
+}
+
+/* Add Menu Item Button */
+.addMenuButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+}
+
+.addMenuButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.addMenuButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+/* Filter Section */
+.filterSection {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.filterLabel {
+  color: #fff;
+  font-weight: 600;
+  min-width: fit-content;
+}
+
+.filterSelect {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(42, 42, 58, 0.8);
+  color: #fff;
+  min-width: 150px;
+  transition: all 0.3s ease;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #64ffda;
+  box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2);
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(42, 42, 58, 0.8);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #64ffda;
+  box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2);
+}
+
+.searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Pagination */
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  gap: 0.5rem;
+}
+
+.paginationButton {
+  background: rgba(42, 42, 58, 0.8);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.paginationButton:hover {
+  background: rgba(100, 255, 218, 0.1);
+  border-color: #64ffda;
+  transform: translateY(-1px);
+}
+
+.paginationButtonActive {
+  background: linear-gradient(135deg, #64ffda, #a8e6cf);
+  color: #000;
+  border-color: #64ffda;
+}
+
+.paginationButtonActive:hover {
+  background: linear-gradient(135deg, #64ffda, #a8e6cf);
+  color: #000;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 1rem;
+  }
+
+  .mainContent {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .categoriesSection {
+    padding: 1.5rem;
+  }
+
+  .filterSection {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .categoryTableHeaderCell,
+  .categoryTableHeaderCellRight {
+    padding: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .categoryTableCell,
+  .categoryTableCellRight {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .pageTitle {
+    font-size: 2rem;
+  }
+
+  .addMenuButton {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .categoryActionButton {
+    margin-left: 0.5rem;
+    padding: 0.25rem;
+    font-size: 0.8rem;
+  }
 }

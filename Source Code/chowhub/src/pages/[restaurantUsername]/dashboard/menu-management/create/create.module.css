@@ -1,83 +1,554 @@
-/* styles/create.module.css */
-
-.formWrapper {
-  background-color: #1e1e2f;
-  color: #ffffff;
+/* Page Layout */
+.pageContainer {
   padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Form Wrapper */
+.formWrapper {
+  background: linear-gradient(135deg, rgba(30, 30, 47, 0.95) 0%, rgba(42, 42, 58, 0.95) 100%);
+  color: #ffffff;
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .formWrapper label {
-  color: #bfbfbf;
-  font-weight: 500;
-}
-
-.ingredientLabel {
-  background-color: #2a2a3a !important;
-  color: #ffffff !important;
-}
-
-.ingredientLabel::placeholder {
-  color: #aaa; /* Change this to match your design */
-  opacity: 1; /* Ensure it's fully visible */
+  color: #e0e0e0;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
 }
 
 .formWrapper h6 {
-  margin-bottom: 0.75rem;
-  color: #a8e6cf;
-  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #64ffda;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
-.formWrapper input,
+/* Form Inputs - EXCLUDE CHECKBOXES */
+.formWrapper input:not([type="checkbox"]),
 .formWrapper textarea,
 .formWrapper select {
-  background-color: #2e2e3e;
-  border: 1px solid #444;
-  color: #fff;
+  background: rgba(42, 42, 58, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+  border-radius: 10px !important;
+  padding: 0.75rem 1rem !important;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
 }
 
-.formWrapper input:focus,
+.formWrapper input:not([type="checkbox"]):focus,
 .formWrapper textarea:focus,
 .formWrapper select:focus {
-  border-color: #64ffda;
-  box-shadow: 0 0 0 0.2rem rgba(100, 255, 218, 0.25);
+  border-color: #64ffda !important;
+  box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.2) !important;
+  background: rgba(42, 42, 58, 0.9) !important;
+  color: #fff !important;
+  outline: none !important;
+}
+
+/* Checkbox specific styles - DON'T OVERRIDE DEFAULTS */
+.formWrapper input[type="checkbox"] {
+  /* Let checkboxes keep their default behavior */
+  background: initial !important;
+  border: initial !important;
+  padding: initial !important;
+  border-radius: initial !important;
 }
 
 .formWrapper .form-check-label {
-  color: #bfbfbf;
+  color: #e0e0e0;
+  font-weight: 500;
 }
 
-.formWrapper button {
-  background-color: #036264;
-  color: #ffffff;
+/* For React Bootstrap form controls specifically - EXCLUDE CHECKBOXES */
+.formWrapper .form-control:not([type="checkbox"]) {
+  color: #fff !important;
+}
+
+.formWrapper .form-control:not([type="checkbox"]):focus {
+  color: #fff !important;
+}
+
+.formWrapper .form-select {
+  color: #fff !important;
+}
+
+.formWrapper .form-select:focus {
+  color: #fff !important;
+}
+
+/* Spoonacular Search */
+.searchSection {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.searchTitle {
+  color: #10b981;
+  font-size: 1.2rem;
   font-weight: 600;
-  border: none;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.formWrapper button:hover {
-  background-color: #51937b;
+.ingredientLabel {
+  background: rgba(42, 42, 58, 0.8) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 10px !important;
+}
+
+.ingredientLabel:focus {
+  color: #ffffff !important;
+}
+
+.placeholderInput {
+  color: #fff !important;
+}
+
+.placeholderInput:focus {
+  color: #fff !important;
+}
+
+.ingredientLabel::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
 }
 
 .placeholderInput::placeholder {
-  color: #aaa; /* Change this to match your design */
-  opacity: 1; /* Ensure it's fully visible */
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
 }
 
+/* Suggestions List */
 .suggestionsList {
-  background-color: #2e2e3e;
+  background: rgba(42, 42, 58, 0.95);
   color: #fff;
-  border: 1px solid #444;
-  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
   overflow: hidden;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 1rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
 .suggestionsListItem {
-  background-color: #2e2e3e;
+  background: rgba(42, 42, 58, 0.95);
   color: #fff;
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .suggestionsListItem:hover {
-  background-color: #3e3e4e;
+  background: rgba(100, 255, 218, 0.1);
+  transform: translateX(5px);
+}
+
+.suggestionsListItem:last-child {
+  border-bottom: none;
+}
+
+.suggestionImage {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.suggestionTitle {
+  font-weight: 500;
+  color: #e0e0e0;
+}
+
+/* Basic Form Groups */
+.formGroup {
+  margin-bottom: 2rem;
+}
+
+.formGroupTitle {
+  color: #10b981;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Variation Cards */
+.variationCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+.variationCard:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(100, 255, 218, 0.3);
+}
+
+.variationHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.variationTitle {
+  color: #10b981;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.variationControls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Ingredient Section */
+.ingredientSection {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.ingredientHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.ingredientTitle {
+  color: #10b981;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inventorySelect {
+  background: rgba(42, 42, 58, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  min-width: 250px;
+}
+
+.inventorySelect:focus {
+  color: #fff !important;
+}
+
+.ingredientRow {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.ingredientRow:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(100, 255, 218, 0.3);
+}
+
+.ingredientControls {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.ingredientInputGroup {
+  flex: 1;
+  min-width: 200px;
+}
+
+.inventoryInfo {
+  background: rgba(100, 255, 218, 0.1) !important;
+  border: 1px solid rgba(100, 255, 218, 0.3) !important;
+  color: #10b981 !important;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.trackCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Buttons */
+.button {
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.buttonPrimary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+}
+
+.buttonPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.buttonSecondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.buttonSecondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.buttonDanger {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: #ffffff;
+}
+
+.buttonDanger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+}
+
+.buttonSuccess {
+  background: linear-gradient(135deg, #0f2e01 0%, #09573a 100%);
+  color: #ffffff;
+}
+
+.buttonSuccess:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(100, 255, 218, 0.3);
+}
+
+.addButton {
+  background: linear-gradient(135deg, rgba(100, 255, 218, 0.2) 0%, rgba(168, 230, 175, 0.2) 100%);
+  border: 1px solid rgba(100, 255, 218, 0.4);
+  color: #64ffda;
+}
+
+.addButton:hover {
+  background: linear-gradient(135deg, rgba(100, 255, 218, 0.3) 0%, rgba(168, 230, 175, 0.3) 100%);
+  border-color: #64ffda;
+}
+
+/* Form Actions */
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.formActionsLeft {
+  display: flex;
+  gap: 1rem;
+}
+
+.formActionsRight {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Warning/Error Messages */
+.warning {
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: #ff8a80;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* File Upload */
+.fileUpload {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+.fileUpload input[type="file"] {
+  position: absolute;
+  left: -9999px;
+}
+
+.fileUploadLabel {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+  width: 100%;
+}
+
+.fileUploadLabel:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #64ffda;
+}
+
+.fileUploadIcon {
+  font-size: 2rem;
+  color: #64ffda;
+  margin-bottom: 0.5rem;
+}
+
+.fileUploadText {
+  color: #e0e0e0;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 1rem;
+  }
+
+  .formWrapper {
+    padding: 2rem 1.5rem;
+  }
+
+  .variationControls {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ingredientControls {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .ingredientInputGroup {
+    min-width: auto;
+  }
+
+  .formActions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .formActionsLeft,
+  .formActionsRight {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .pageTitle {
+    font-size: 2rem;
+  }
+
+  .formWrapper {
+    padding: 1.5rem 1rem;
+  }
+
+  .searchSection {
+    padding: 1.5rem;
+  }
+
+  .variationCard {
+    padding: 1.5rem;
+  }
+
+  .ingredientSection {
+    padding: 1rem;
+  }
+}
+
+/* NUCLEAR OPTION - COMPLETELY RESET ALL CHECKBOX STYLES */
+.formWrapper input[type="checkbox"],
+.formWrapper .form-check-input {
+  all: revert !important;
+  appearance: auto !important;
+  -webkit-appearance: checkbox !important;
+  -moz-appearance: checkbox !important;
+  display: inline-block !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  position: static !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.formWrapper .form-check {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
 }

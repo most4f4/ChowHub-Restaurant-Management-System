@@ -68,7 +68,7 @@ export default function CreateMenuItemForm() {
       if (searchTerm.trim() !== "") {
         try {
           const res = await fetch(
-            `https://api.spoonacular.com/recipes/complexSearch?query=${searchTerm}&number=5&apiKey=${process.env.NEXT_PUBLIC_SPOONACULARE_API_KEY3}`,
+            `https://api.spoonacular.com/recipes/complexSearch?query=${searchTerm}&number=20&apiKey=${process.env.NEXT_PUBLIC_SPOONACULARE_API_KEY3}`,
           );
           const data = await res.json();
           setSuggestions(data.results);
@@ -208,19 +208,30 @@ export default function CreateMenuItemForm() {
   const matchIngredients = (vIndex) => {
     const newVariations = [...form.variations];
     const baseIngredients = newVariations[0].ingredients;
-    // Deep copy with reset fields
+
+    // Deep copy with preserved inventory info
     newVariations[vIndex].ingredients = baseIngredients.map((ing) => ({
       name: ing.name,
       unit: ing.unit,
       ingredientId: ing.ingredientId,
-      isChecked: false,
-      track: false,
-      quantityUsed: "",
+      isChecked: ing.isChecked, // ← PRESERVE THIS!
+      inventoryQuantity: ing.inventoryQuantity, // ← ADD THIS!
+      track: false, // Reset tracking
+      quantityUsed: "", // Reset quantity
       quantityOriginal: ing.quantityOriginal,
     }));
 
     const isInventoryControlled = checkInventoryControl(newVariations);
     setForm({ ...form, variations: newVariations, isInventoryControlled });
+
+    //Re-check ingredients for any that aren't already checked
+    setTimeout(() => {
+      newVariations[vIndex].ingredients.forEach((ing, iIndex) => {
+        if (!ing.isChecked && ing.name.trim()) {
+          checkIngredients(vIndex, iIndex);
+        }
+      });
+    }, 100);
   };
 
   // Adds a selected inventory ingredient to a variation if not already present, and updates the form state.
@@ -385,235 +396,317 @@ export default function CreateMenuItemForm() {
   return (
     <DashboardLayout>
       <ManagerOnly>
-        <h1> Create New Menu Item</h1>
-        <Form onSubmit={handleSubmit} className={styles.formWrapper}>
-          {/* Spoonacular Search Field */}
-          <Form.Group className="mb-3" controlId="spoonacularSearch">
-            <Form.Label>Search Meals</Form.Label>
-            <Form.Control
-              type="text"
-              className={styles.ingredientLabel}
-              placeholder="Search from Spoonacular..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </Form.Group>
+        <div className={styles.pageContainer}>
+          <h1 className={styles.pageTitle}>🍽️ Create New Menu Item</h1>
 
-          {Array.isArray(suggestions) && suggestions.length > 0 && (
-            <ul className={`list-group mt-2 ${styles.suggestionsList}`}>
-              {suggestions.map((item) => (
-                <li
-                  key={item.id}
-                  className={`list-group-item list-group-item-action d-flex align-items-center ${styles.suggestionsListItem}`}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => handleSelectSuggestion(item)}
-                >
-                  <img
-                    src={`${item.image}`}
-                    alt={item.name}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      objectFit: "cover",
-                      marginRight: "1rem",
-                    }}
-                  />
-                  {item.title}
-                </li>
-              ))}
-            </ul>
-          )}
+          <Form onSubmit={handleSubmit} className={styles.formWrapper}>
+            {/* Spoonacular Search Section */}
+            <div className={styles.searchSection}>
+              <h3 className={styles.searchTitle}>🔍 Search Recipe Database</h3>
+              <Form.Group controlId="spoonacularSearch">
+                <Form.Label>Find inspiration from thousands of recipes</Form.Label>
+                <Form.Control
+                  type="text"
+                  className={styles.ingredientLabel}
+                  placeholder="Search for recipes, dishes, or cuisines..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+              </Form.Group>
 
-          <br />
-
-          <Form.Group className="mb-3">
-            <Form.Label>Name</Form.Label>
-            <Form.Control name="name" value={form.name} onChange={handleChange} required />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              name="description"
-              as="textarea"
-              rows={2}
-              value={form.description}
-              onChange={handleChange}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Category</Form.Label>
-            <Form.Select name="category" value={form.category} onChange={handleChange} required>
-              <option value="">Select category</option>
-              {categories.map((cat) => (
-                <option key={cat._id} value={cat._id}>
-                  {cat.name}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Image</Form.Label>
-            <Form.Control
-              type="file"
-              accept="image/*"
-              onChange={(e) => setForm({ ...form, imageFile: e.target.files[0] })}
-            />
-          </Form.Group>
-
-          {form.variations.map((variation, vIndex) => (
-            <div key={vIndex} className="mb-4 border p-3 rounded">
-              <Row className="align-items-end">
-                <Col>
-                  <Form.Label>Variation Name</Form.Label>
-                  <Form.Control
-                    placeholder="Name"
-                    className={styles.placeholderInput}
-                    value={variation.name}
-                    onChange={(e) => handleVariationChange(vIndex, "name", e.target.value)}
-                  />
-                </Col>
-                <Col>
-                  <Form.Control
-                    type="number"
-                    placeholder="Price"
-                    className={styles.placeholderInput}
-                    value={variation.price}
-                    onChange={(e) => handleVariationChange(vIndex, "price", e.target.value)}
-                  />
-                </Col>
-                <Col>
-                  <Form.Control
-                    type="number"
-                    placeholder="Cost"
-                    className={styles.placeholderInput}
-                    value={variation.cost}
-                    onChange={(e) => handleVariationChange(vIndex, "cost", e.target.value)}
-                  />
-                </Col>
-
-                <Col md="auto">
-                  {vIndex > 0 && (
-                    <Button variant="danger" onClick={() => handleRemoveVariation(vIndex)}>
-                      Remove
-                    </Button>
-                  )}
-                </Col>
-              </Row>
-              <Button className="mt-4 mb-3" onClick={() => handleAddIngredient(vIndex)}>
-                + Add Ingredient
-              </Button>
-              {vIndex > 0 && (
-                <>
-                  <br />
-                  <Button className="mt-4 mb-3" onClick={() => matchIngredients(vIndex)}>
-                    Match Ingredients
-                  </Button>
-                </>
-              )}
-              <>
-                <Row className="mb-2">
-                  <Col>
-                    <Form.Select
-                      value=""
-                      onChange={(e) => {
-                        handleAddIngredientFromSelect(vIndex, e.target.value);
-                        e.target.value = "";
-                      }}
+              {Array.isArray(suggestions) && suggestions.length > 0 && (
+                <ul className={styles.suggestionsList}>
+                  {suggestions.map((item) => (
+                    <li
+                      key={item.id}
+                      className={styles.suggestionsListItem}
+                      onClick={() => handleSelectSuggestion(item)}
                     >
-                      <option value="">Select from inventory</option>
-                      {inventoryIgredients.map((ing) => (
-                        <option key={ing._id} value={ing._id}>
-                          {ing.name} ({ing.quantity} {ing.unit})
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Col>
-                </Row>
+                      <img src={item.image} alt={item.title} className={styles.suggestionImage} />
+                      <span className={styles.suggestionTitle}>{item.title}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
-                {form.variations[vIndex].ingredients.map((ing, iIndex) => (
-                  <Row key={iIndex} className="mt-2 align-items-end">
-                    <Col style={{ flex: "0 0 250px" }}>
+            {/* Basic Information */}
+            <div className={styles.formGroup}>
+              <h3 className={styles.formGroupTitle}>📝 Basic Information</h3>
+
+              <Form.Group className="mb-3">
+                <Form.Label>📛 Menu Item Name</Form.Label>
+                <Form.Control
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Enter the name of your dish..."
+                  required
+                  className={styles.placeholderInput}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>📄 Description</Form.Label>
+                <Form.Control
+                  name="description"
+                  as="textarea"
+                  rows={3}
+                  value={form.description}
+                  onChange={handleChange}
+                  placeholder="Describe your dish - ingredients, taste, preparation style..."
+                  className={styles.placeholderInput}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>🏷️ Category</Form.Label>
+                <Form.Select name="category" value={form.category} onChange={handleChange} required>
+                  <option value="">Select a category for your dish</option>
+                  {categories.map((cat) => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>📸 Upload Image</Form.Label>
+                <div className={styles.fileUpload}>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id="imageFile"
+                    onChange={(e) => setForm({ ...form, imageFile: e.target.files[0] })}
+                  />
+                  <label htmlFor="imageFile" className={styles.fileUploadLabel}>
+                    <div className={styles.fileUploadIcon}>📷</div>
+                    <div className={styles.fileUploadText}>
+                      {form.imageFile ? form.imageFile.name : "Click to upload an image"}
+                    </div>
+                  </label>
+                </div>
+              </Form.Group>
+            </div>
+
+            {/* Variations Section */}
+            <div className={styles.formGroup}>
+              <h3 className={styles.formGroupTitle}>🎛️ Variations & Pricing</h3>
+
+              {form.variations.map((variation, vIndex) => (
+                <div key={vIndex} className={styles.variationCard}>
+                  <div className={styles.variationHeader}>
+                    <h4 className={styles.variationTitle}>🍴 Variation {vIndex + 1}</h4>
+                    {vIndex > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveVariation(vIndex)}
+                        className={`${styles.button} ${styles.buttonDanger}`}
+                      >
+                        🗑️ Remove
+                      </button>
+                    )}
+                  </div>
+
+                  <Row className={styles.variationControls}>
+                    <Col md={4}>
+                      <Form.Label>Variation Name</Form.Label>
                       <Form.Control
-                        placeholder="Ingredient Name"
+                        placeholder="e.g., Regular, Large, Spicy..."
                         className={styles.placeholderInput}
-                        value={ing.name}
-                        onChange={(e) =>
-                          handleIngredientChange(vIndex, iIndex, "name", e.target.value)
-                        }
+                        value={variation.name}
+                        onChange={(e) => handleVariationChange(vIndex, "name", e.target.value)}
                       />
                     </Col>
-
-                    {ing.isChecked && (
-                      <>
-                        <Col>
-                          <Form.Control
-                            type="text"
-                            value={`→ ${ing.inventoryQuantity} / ${ing.unit || ""}`}
-                            disabled
-                            readOnly
-                            className={styles.ingredientLabel}
-                          />
-                        </Col>
-
-                        <Col>
-                          <Form.Control
-                            type="number"
-                            className={styles.ingredientLabel}
-                            placeholder="Quantity Used"
-                            value={ing.quantityUsed}
-                            onChange={(e) =>
-                              handleIngredientChange(vIndex, iIndex, "quantityUsed", e.target.value)
-                            }
-                          />
-                        </Col>
-
-                        <Col xs="auto">
-                          <Form.Check
-                            type="checkbox"
-                            label="Track"
-                            disabled={!ing.isChecked}
-                            checked={ing.track}
-                            onChange={(e) =>
-                              handleIngredientChange(vIndex, iIndex, "track", e.target.checked)
-                            }
-                          />
-                        </Col>
-                      </>
-                    )}
-
-                    <Col xs="auto">
-                      <Button
-                        variant="danger"
-                        onClick={() => handleRemoveIngredient(vIndex, iIndex)}
-                      >
-                        Remove
-                      </Button>
+                    <Col md={4}>
+                      <Form.Label>💰 Selling Price</Form.Label>
+                      <Form.Control
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                        className={styles.placeholderInput}
+                        value={variation.price}
+                        onChange={(e) => handleVariationChange(vIndex, "price", e.target.value)}
+                      />
+                    </Col>
+                    <Col md={4}>
+                      <Form.Label>📊 Cost to Make</Form.Label>
+                      <Form.Control
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                        className={styles.placeholderInput}
+                        value={variation.cost}
+                        onChange={(e) => handleVariationChange(vIndex, "cost", e.target.value)}
+                      />
                     </Col>
                   </Row>
-                ))}
-              </>
+
+                  {/* Ingredients Section */}
+                  <div className={styles.ingredientSection}>
+                    <div className={styles.ingredientHeader}>
+                      <h5 className={styles.ingredientTitle}>🥘 Ingredients</h5>
+                      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+                        <button
+                          type="button"
+                          onClick={() => handleAddIngredient(vIndex)}
+                          className={`${styles.button} ${styles.addButton}`}
+                        >
+                          ➕ Add Ingredient
+                        </button>
+                        {vIndex > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => matchIngredients(vIndex)}
+                            className={`${styles.button} ${styles.buttonSecondary}`}
+                          >
+                            🔄 Match Base Ingredients
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    <Row className="mb-3">
+                      <Col>
+                        <Form.Label>📦 Quick Add from Inventory</Form.Label>
+                        <Form.Select
+                          className={styles.inventorySelect}
+                          value=""
+                          onChange={(e) => {
+                            handleAddIngredientFromSelect(vIndex, e.target.value);
+                            e.target.value = "";
+                          }}
+                        >
+                          <option value="">Select an ingredient from inventory...</option>
+                          {inventoryIgredients.map((ing) => (
+                            <option key={ing._id} value={ing._id}>
+                              {ing.name} ({ing.quantity} {ing.unit} available)
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Col>
+                    </Row>
+
+                    {form.variations[vIndex].ingredients.map((ing, iIndex) => (
+                      <div key={iIndex} className={styles.ingredientRow}>
+                        <Row className={styles.ingredientControls}>
+                          <Col md={3} className={styles.ingredientInputGroup}>
+                            <Form.Label>Ingredient Name</Form.Label>
+                            <Form.Control
+                              placeholder="Enter ingredient name..."
+                              className={styles.placeholderInput}
+                              value={ing.name}
+                              onChange={(e) =>
+                                handleIngredientChange(vIndex, iIndex, "name", e.target.value)
+                              }
+                            />
+                          </Col>
+
+                          {ing.isChecked && (
+                            <>
+                              <Col md={3} className={styles.ingredientInputGroup}>
+                                <Form.Label>📋 Inventory Status</Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  value={`${ing.inventoryQuantity} ${ing.unit || ""} available`}
+                                  disabled
+                                  readOnly
+                                  className={styles.inventoryInfo}
+                                />
+                              </Col>
+
+                              <Col md={3} className={styles.ingredientInputGroup}>
+                                <Form.Label>⚖️ Amount Needed</Form.Label>
+                                <Form.Control
+                                  type="number"
+                                  step="0.01"
+                                  className={styles.ingredientLabel}
+                                  placeholder="0.00"
+                                  value={ing.quantityUsed}
+                                  onChange={(e) =>
+                                    handleIngredientChange(
+                                      vIndex,
+                                      iIndex,
+                                      "quantityUsed",
+                                      e.target.value,
+                                    )
+                                  }
+                                />
+                              </Col>
+
+                              <Col xs="auto">
+                                <Form.Check
+                                  type="checkbox"
+                                  label="Track"
+                                  disabled={!ing.isChecked}
+                                  checked={ing.track}
+                                  onChange={(e) =>
+                                    handleIngredientChange(
+                                      vIndex,
+                                      iIndex,
+                                      "track",
+                                      e.target.checked,
+                                    )
+                                  }
+                                />
+                              </Col>
+                            </>
+                          )}
+
+                          <Col xs="auto" style={{ alignSelf: "end" }}>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveIngredient(vIndex, iIndex)}
+                              className={`${styles.button} ${styles.buttonDanger}`}
+                            >
+                              🗑️
+                            </button>
+                          </Col>
+                        </Row>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={handleAddVariation}
+                className={`${styles.button} ${styles.buttonSecondary}`}
+              >
+                ➕ Add Another Variation
+              </button>
             </div>
-          ))}
 
-          <Button className="mb-4" variant="secondary" onClick={handleAddVariation}>
-            + Add Variation
-          </Button>
+            {warning && <div className={styles.warning}>⚠️ {warning}</div>}
 
-          {warning && <p className="text-danger">{warning}</p>}
+            <div className={styles.formActions}>
+              <div className={styles.formActionsLeft}>
+                <button
+                  type="button"
+                  onClick={() => setForm(getInitialFormState())}
+                  className={`${styles.button} ${styles.buttonSecondary}`}
+                >
+                  🔄 Reset Form
+                </button>
+              </div>
 
-          <div className="d-flex justify-content-end mt-4">
-            <Button variant="secondary" onClick={() => setForm(getInitialFormState())}>
-              Reset Form
-            </Button>
-
-            <Button type="submit" className="ms-3">
-              Create Menu Item
-            </Button>
-          </div>
-        </Form>
+              <div className={styles.formActionsRight}>
+                <button
+                  type="button"
+                  onClick={() => router.back()}
+                  className={`${styles.button} ${styles.buttonSecondary}`}
+                >
+                  ↩️ Cancel
+                </button>
+                <button type="submit" className={`${styles.button} ${styles.buttonSuccess}`}>
+                  ✅ Create Menu Item
+                </button>
+              </div>
+            </div>
+          </Form>
+        </div>
       </ManagerOnly>
     </DashboardLayout>
   );

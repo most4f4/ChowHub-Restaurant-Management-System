@@ -1,0 +1,396 @@
+/* VariationTable Component Styles */
+
+/* Main Container */
+.tableContainer {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  margin: 1.5rem 0;
+}
+
+/* Table Styling */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+  margin: 0;
+}
+
+/* Header Styling */
+.tableHeader {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+}
+
+.headerCell {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+}
+
+.headerCell:first-child {
+  border-radius: 0;
+}
+
+.headerCell:last-child {
+  border-radius: 0;
+  text-align: center;
+}
+
+/* Row Styling */
+.tableRow {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tableRow:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  transform: translateY(-1px);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+/* Cell Styling */
+.tableCell {
+  padding: 1rem 1.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tableCell:last-child {
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Name Cell Styling */
+.nameCell {
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Price/Cost Cell Styling */
+.priceCell,
+.costCell {
+  font-family:
+    "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  font-weight: 500;
+  color: #4dabf7;
+}
+
+.costCell {
+  color: #ffa94d;
+}
+
+/* Ingredients Cell Styling */
+.ingredientsCell {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.ingredientCount {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Actions Styling */
+.actionsContainer {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.actionButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.editButton {
+  color: #4dabf7;
+  background: rgba(77, 171, 247, 0.1);
+}
+
+.editButton:hover {
+  background: rgba(77, 171, 247, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(77, 171, 247, 0.3);
+}
+
+.deleteButton {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.deleteButton:hover {
+  background: rgba(255, 107, 107, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+/* Action Icons */
+.actionIcon {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  transition: transform 0.2s ease;
+}
+
+.actionButton:hover .actionIcon {
+  transform: scale(1.1);
+}
+
+/* Empty State Styling */
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.emptyStateIcon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.3;
+  display: block;
+}
+
+.emptyStateTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.emptyStateText {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.emptyStateSubtext {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Loading State */
+.loadingState {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.loadingSpinner {
+  margin-bottom: 1rem;
+}
+
+.loadingText {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Hover Effects for Rows */
+.tableRow:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.tableRow:nth-child(odd) {
+  background: transparent;
+}
+
+/* Table Stats/Summary */
+.tableStats {
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.statsItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statsValue {
+  font-weight: 600;
+  color: #4dabf7;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .headerCell,
+  .tableCell {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .actionsContainer {
+    gap: 0.5rem;
+  }
+
+  .actionButton {
+    width: 32px;
+    height: 32px;
+    padding: 0.375rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tableContainer {
+    border-radius: 12px;
+    margin: 1rem 0;
+  }
+
+  .headerCell,
+  .tableCell {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .headerCell {
+    letter-spacing: 0.25px;
+  }
+
+  .emptyState {
+    padding: 3rem 1.5rem;
+  }
+
+  .emptyStateIcon {
+    font-size: 3rem;
+  }
+
+  .emptyStateTitle {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .table {
+    font-size: 0.8rem;
+  }
+
+  .headerCell,
+  .tableCell {
+    padding: 0.625rem 0.75rem;
+  }
+
+  .actionsContainer {
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .actionButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .actionIcon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .emptyState {
+    padding: 2rem 1rem;
+  }
+
+  .tableStats {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+}
+
+/* Accessibility Improvements */
+.actionButton:focus {
+  outline: 2px solid #4dabf7;
+  outline-offset: 2px;
+}
+
+.actionButton:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .tableContainer {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .headerCell,
+  .tableCell {
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .actionButton {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .tableRow,
+  .actionButton,
+  .actionIcon {
+    transition: none;
+  }
+
+  .tableRow:hover {
+    transform: none;
+  }
+
+  .actionButton:hover {
+    transform: none;
+  }
+
+  .actionButton:hover .actionIcon {
+    transform: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .tableContainer {
+    background: white;
+    color: black;
+    border: 1px solid black;
+    box-shadow: none;
+  }
+
+  .headerCell,
+  .tableCell {
+    color: black;
+    border-bottom: 1px solid black;
+  }
+
+  .actionsContainer {
+    display: none;
+  }
+}
