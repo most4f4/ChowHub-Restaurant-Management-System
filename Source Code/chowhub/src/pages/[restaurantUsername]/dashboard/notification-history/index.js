@@ -28,7 +28,6 @@ import {
   FiClock,
 } from "react-icons/fi";
 import { toast } from "react-toastify";
-import NotificationPopSmall from "@/components/NotificationPopSmall";
 import styles from "./notifications.module.css";
 
 export default function NotificationPage() {
