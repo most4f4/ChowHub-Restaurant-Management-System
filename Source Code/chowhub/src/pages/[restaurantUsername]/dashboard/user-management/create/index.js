@@ -24,6 +24,7 @@ export default function CreateEmployeeForm() {
     emergencyContact: "",
     username: "",
     role: "",
+    phone: "",
   });
   const [availableUsername, setAvailableUsername] = useState(null);
   const [checkingUsername, setCheckingUsername] = useState(false);
