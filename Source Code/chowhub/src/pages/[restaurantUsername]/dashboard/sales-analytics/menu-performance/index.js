@@ -45,6 +45,64 @@ ChartJS.register(
   Filler,
 );
 
+const generateDistinctColors = (categories) => {
+  // Base colors for common categories
+  const baseColors = {
+    Appetizers: "#FF6384",
+    "Main Dishes": "#36A2EB",
+    Desserts: "#FFCE56",
+    Drinks: "#4BC0C0",
+    Salads: "#9966FF",
+    Sides: "#FF9F40",
+    Beverages: "#4BC0C0",
+    "Main Course": "#36A2EB",
+    Starters: "#FF6384",
+    Entrees: "#36A2EB",
+    Mains: "#36A2EB",
+  };
+
+  // Extended color palette for additional categories
+  const extendedColors = [
+    "#FF6B6B",
+    "#4ECDC4",
+    "#45B7D1",
+    "#96CEB4",
+    "#FFEAA7",
+    "#DDA0DD",
+    "#F4A460",
+    "#87CEEB",
+    "#98D8C8",
+    "#F7DC6F",
+    "#BB8FCE",
+    "#85C1E9",
+    "#F8C471",
+    "#82E0AA",
+    "#F1948A",
+    "#AED6F1",
+    "#A9DFBF",
+    "#F9E79F",
+    "#D7BDE2",
+    "#A2D9CE",
+  ];
+
+  const colorMap = {};
+  let extendedIndex = 0;
+
+  categories.forEach((category) => {
+    const categoryName = category.categoryName || "Uncategorized";
+
+    if (baseColors[categoryName]) {
+      colorMap[categoryName] = baseColors[categoryName];
+    } else {
+      // Assign a unique color from extended palette
+      colorMap[categoryName] = extendedColors[extendedIndex % extendedColors.length];
+      extendedIndex++;
+    }
+  });
+
+  return colorMap;
+};
+
 export default function MenuPerformancePage() {
   const router = useRouter();
   const { restaurantUsername } = router.query;
@@ -159,16 +217,8 @@ export default function MenuPerformancePage() {
     </div>
   );
 
-  // Chart configurations
-  const categoryColors = {
-    Appetizers: "#FF6384",
-    "Main Dishes": "#36A2EB",
-    Desserts: "#FFCE56",
-    Drinks: "#4BC0C0",
-    Salads: "#9966FF",
-    Sides: "#FF9F40",
-    default: "#C9CBCF",
-  };
+  // Chart configurations - Generate dynamic colors
+  const categoryColors = generateDistinctColors(categoryData.categoryPerformance);
 
   // Category revenue chart
   const categoryRevenueData = {
@@ -178,10 +228,10 @@ export default function MenuPerformancePage() {
         label: "Total Revenue ($)",
         data: categoryData.categoryPerformance.map((cat) => cat.totalRevenue),
         backgroundColor: categoryData.categoryPerformance.map(
-          (cat) => categoryColors[cat.categoryName] || categoryColors.default,
+          (cat) => categoryColors[cat.categoryName || "Uncategorized"],
         ),
         borderColor: categoryData.categoryPerformance.map(
-          (cat) => categoryColors[cat.categoryName] || categoryColors.default,
+          (cat) => categoryColors[cat.categoryName || "Uncategorized"],
         ),
         borderWidth: 2,
       },
@@ -336,7 +386,7 @@ export default function MenuPerformancePage() {
       {
         data: categoryData.categoryPerformance.map((cat) => cat.totalRevenue),
         backgroundColor: categoryData.categoryPerformance.map(
-          (cat) => categoryColors[cat.categoryName] || categoryColors.default,
+          (cat) => categoryColors[cat.categoryName || "Uncategorized"],
         ),
       },
     ],
@@ -374,7 +424,7 @@ export default function MenuPerformancePage() {
   return (
     <DashboardLayout>
       <ManagerOnly>
-        <div style={{ padding: "1rem" }}>
+        <div style={{ padding: "2rem" }}>
           <div style={{ marginBottom: "2rem" }}>
             <AnalyticsBackButton />
           </div>
@@ -565,7 +615,7 @@ export default function MenuPerformancePage() {
                     border: "1px solid #3A3A4A",
                   }}
                 >
-                  <h3 style={{ marginBottom: "1rem" }}>💰 Revenue by Category</h3>
+                  <h3 style={{ marginBottom: "1rem", color: "#FFF" }}>💰 Revenue by Category</h3>
                   {categoryData.categoryPerformance.length > 0 ? (
                     <div style={{ height: "300px" }}>
                       <Bar
@@ -590,7 +640,7 @@ export default function MenuPerformancePage() {
                     border: "1px solid #3A3A4A",
                   }}
                 >
-                  <h3 style={{ marginBottom: "1rem" }}>🥧 Revenue Distribution</h3>
+                  <h3 style={{ marginBottom: "1rem", color: "#FFF" }}>🥧 Revenue Distribution</h3>
                   {categoryData.categoryPerformance.length > 0 ? (
                     <div style={{ height: "300px" }}>
                       <Doughnut
@@ -625,7 +675,9 @@ export default function MenuPerformancePage() {
                     border: "1px solid #3A3A4A",
                   }}
                 >
-                  <h3 style={{ marginBottom: "1rem" }}>📊 Quantity Sold by Category</h3>
+                  <h3 style={{ marginBottom: "1rem", color: "#FFF" }}>
+                    📊 Quantity Sold by Category
+                  </h3>
                   {categoryData.categoryPerformance.length > 0 ? (
                     <div style={{ height: "300px" }}>
                       <Bar
@@ -650,7 +702,7 @@ export default function MenuPerformancePage() {
                     border: "1px solid #3A3A4A",
                   }}
                 >
-                  <h3 style={{ marginBottom: "1rem" }}>🎯 Performance Comparison</h3>
+                  <h3 style={{ marginBottom: "1rem", color: "#FFF" }}>🎯 Performance Comparison</h3>
                   {categoryData.categoryPerformance.length > 0 ? (
                     <div style={{ height: "300px" }}>
                       <Radar data={radarData} options={radarOptions} key="radar-chart" />
@@ -674,7 +726,9 @@ export default function MenuPerformancePage() {
                     border: "1px solid #3A3A4A",
                   }}
                 >
-                  <h3 style={{ marginBottom: "1rem" }}>🍽️ Category Performance Details</h3>
+                  <h3 style={{ marginBottom: "1rem", color: "#FFF" }}>
+                    🍽️ Category Performance Details
+                  </h3>
                   <div style={{ display: "grid", gap: "1rem" }}>
                     {categoryData.categoryPerformance.map((category, index) => (
                       <div
@@ -701,7 +755,7 @@ export default function MenuPerformancePage() {
                         />
 
                         <div>
-                          <div style={{ fontWeight: 600, marginBottom: "0.25rem" }}>
+                          <div style={{ fontWeight: 600, marginBottom: "0.25rem", color: "#FFF" }}>
                             {category.categoryName || "Uncategorized"}
                           </div>
                           <div style={{ color: "#CCC", fontSize: "0.9rem" }}>
@@ -754,7 +808,7 @@ export default function MenuPerformancePage() {
                     border: "1px solid #3A3A4A",
                   }}
                 >
-                  <h3 style={{ marginBottom: "1rem" }}>🏆 Top Items by Category</h3>
+                  <h3 style={{ marginBottom: "1rem", color: "#FFF" }}>🏆 Top Items by Category</h3>
                   <div
                     style={{
                       display: "grid",
@@ -810,7 +864,7 @@ export default function MenuPerformancePage() {
                               }}
                             >
                               <div>
-                                <div style={{ fontWeight: 600, fontSize: "0.9rem" }}>
+                                <div style={{ fontWeight: 600, fontSize: "0.9rem", color: "#FFF" }}>
                                   {itemIndex + 1}. {item.name}
                                   {item.variationName && (
                                     <span style={{ color: "#888", fontSize: "0.8rem" }}>

@@ -1,12 +1,12 @@
 // src/pages/InventoryPerformance/index.js
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router"; 
-import DashboardLayout from "@/components/DashboardLayout"; 
-import { ManagerOnly } from "@/components/Protected"; 
-import { apiFetch } from "@/lib/api"; 
-import { Form, Button, Row, Col } from "react-bootstrap"; 
-import { FiAlertTriangle, FiCheckCircle, FiCalendar, FiBox } from "react-icons/fi"; 
-import { toast } from "react-toastify"; 
+import { useRouter } from "next/router";
+import DashboardLayout from "@/components/DashboardLayout";
+import { ManagerOnly } from "@/components/Protected";
+import { apiFetch } from "@/lib/api";
+import { Form, Button, Row, Col } from "react-bootstrap";
+import { FiAlertTriangle, FiCheckCircle, FiCalendar, FiBox } from "react-icons/fi";
+import { toast } from "react-toastify";
 import AnalyticsBackButton from "@/components/AnalyticsBackButton";
 
 export default function InventoryPerformancePage() {
@@ -19,11 +19,10 @@ export default function InventoryPerformancePage() {
 
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState({
-
     startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
     endDate: new Date().toISOString().split("T")[0],
   });
-  const [apiDateRange, setApiDateRange] = useState({ startDate: '', endDate: '' }); // To store the actual range returned by API
+  const [apiDateRange, setApiDateRange] = useState({ startDate: "", endDate: "" }); // To store the actual range returned by API
 
   const loadInventoryPerformanceData = async () => {
     try {
@@ -37,14 +36,13 @@ export default function InventoryPerformancePage() {
 
       setTopItemsBelowThreshold(response.topItemsBelowThreshold || []);
       setItemsRarelyBelowThreshold(response.itemsRarelyBelowThreshold || []);
-      setApiDateRange(response.dateRange || { startDate: '', endDate: '' });
-
+      setApiDateRange(response.dateRange || { startDate: "", endDate: "" });
     } catch (err) {
       console.error("Failed to load inventory performance analytics:", err);
       toast.error("Failed to load inventory performance analytics");
       setTopItemsBelowThreshold([]);
       setItemsRarelyBelowThreshold([]);
-      setApiDateRange({ startDate: '', endDate: '' }); 
+      setApiDateRange({ startDate: "", endDate: "" });
     } finally {
       setLoading(false);
     }
@@ -54,7 +52,7 @@ export default function InventoryPerformancePage() {
     if (router.isReady) {
       loadInventoryPerformanceData();
     }
-  }, [router.isReady, dateRange]); 
+  }, [router.isReady, dateRange]);
 
   const handleDateChange = (field, value) => {
     setDateRange((prev) => ({
@@ -110,10 +108,10 @@ export default function InventoryPerformancePage() {
   return (
     <DashboardLayout>
       <ManagerOnly>
-        <div style={{ padding: "1rem" }}>
-        <div style={{ marginBottom: "2rem" }}>
-                    <AnalyticsBackButton />
-                  </div>
+        <div style={{ padding: "2rem" }}>
+          <div style={{ marginBottom: "2rem" }}>
+            <AnalyticsBackButton />
+          </div>
           <h1
             style={{
               color: "#FFF",
@@ -123,7 +121,7 @@ export default function InventoryPerformancePage() {
               gap: "1rem",
             }}
           >
-            <FiBox style={{ color: "#FFC107" }} /> 
+            <FiBox style={{ color: "#FFC107" }} />
             Inventory Performance Analytics
           </h1>
 
@@ -185,10 +183,10 @@ export default function InventoryPerformancePage() {
                   onClick={loadInventoryPerformanceData}
                   disabled={loading}
                   style={{
-                    backgroundColor: loading ? "#666" : "#FFC107", 
+                    backgroundColor: loading ? "#666" : "#FFC107",
                     borderColor: loading ? "#666" : "#FFC107",
                     width: "100%",
-                    color: "#1E1E2F" 
+                    color: "#1E1E2F",
                   }}
                 >
                   {loading ? "Loading..." : "Apply Filter"}
@@ -224,8 +222,12 @@ export default function InventoryPerformancePage() {
               <style jsx>
                 {`
                   @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
+                    0% {
+                      transform: rotate(0deg);
+                    }
+                    100% {
+                      transform: rotate(360deg);
+                    }
                   }
                 `}
               </style>
@@ -246,7 +248,7 @@ export default function InventoryPerformancePage() {
                   label="Total Breach Incidents"
                   value={topItemsBelowThreshold.reduce((acc, item) => acc + item.breachCount, 0)}
                   color="#FFC107" // Yellow/Amber for alerts
-                  subtext={`From ${apiDateRange.startDate ? apiDateRange.startDate.split('T')[0] : 'N/A'} to ${apiDateRange.endDate ? apiDateRange.endDate.split('T')[0] : 'N/A'}`}
+                  subtext={`From ${apiDateRange.startDate ? apiDateRange.startDate.split("T")[0] : "N/A"} to ${apiDateRange.endDate ? apiDateRange.endDate.split("T")[0] : "N/A"}`}
                 />
                 <SummaryCard
                   icon={<FiBox />}
@@ -262,7 +264,6 @@ export default function InventoryPerformancePage() {
                   color="#28A745" // Green for good items
                   subtext={`Rarely below threshold`}
                 />
-                
               </div>
 
               {/* Top Items Below Threshold Section */}
@@ -288,21 +289,28 @@ export default function InventoryPerformancePage() {
                     }}
                   >
                     {topItemsBelowThreshold.map((item, index) => (
-                      <div key={item._id} style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "0.8rem 1rem",
-                        marginBottom: "0.5rem",
-                        backgroundColor: "#252538",
-                        borderRadius: 6,
-                        border: `1px solid ${index === 0 ? "#FFD70020" : "#FFC10720"}`, // Highlight top item
-                      }}>
-                        <div style={{display: "flex", alignItems: "center", gap: "0.8rem"}}>
-                          <span style={{color: "#FFC107", fontWeight: "bold"}}>{index + 1}.</span>
-                          <p style={{margin: 0, color: "#FFF", fontSize: "1.1rem"}}>{item.name}</p>
+                      <div
+                        key={item._id}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: "0.8rem 1rem",
+                          marginBottom: "0.5rem",
+                          backgroundColor: "#252538",
+                          borderRadius: 6,
+                          border: `1px solid ${index === 0 ? "#FFD70020" : "#FFC10720"}`, // Highlight top item
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+                          <span style={{ color: "#FFC107", fontWeight: "bold" }}>{index + 1}.</span>
+                          <p style={{ margin: 0, color: "#FFF", fontSize: "1.1rem" }}>
+                            {item.name}
+                          </p>
                         </div>
-                        <p style={{margin: 0, color: "#CCC", fontSize: "1rem"}}>Breach Count: {item.breachCount}</p>
+                        <p style={{ margin: 0, color: "#CCC", fontSize: "1rem" }}>
+                          Breach Count: {item.breachCount}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -332,21 +340,28 @@ export default function InventoryPerformancePage() {
                     }}
                   >
                     {itemsRarelyBelowThreshold.map((item, index) => (
-                      <div key={item._id} style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "0.8rem 1rem",
-                        marginBottom: "0.5rem",
-                        backgroundColor: "#252538",
-                        borderRadius: 6,
-                        border: `1px solid ${index === 0 ? "#28A74520" : "#20C99720"}`, 
-                      }}>
-                        <div style={{display: "flex", alignItems: "center", gap: "0.8rem"}}>
-                          <span style={{color: "#28A745", fontWeight: "bold"}}>{index + 1}.</span>
-                          <p style={{margin: 0, color: "#FFF", fontSize: "1.1rem"}}>{item.name}</p>
+                      <div
+                        key={item._id}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: "0.8rem 1rem",
+                          marginBottom: "0.5rem",
+                          backgroundColor: "#252538",
+                          borderRadius: 6,
+                          border: `1px solid ${index === 0 ? "#28A74520" : "#20C99720"}`,
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+                          <span style={{ color: "#28A745", fontWeight: "bold" }}>{index + 1}.</span>
+                          <p style={{ margin: 0, color: "#FFF", fontSize: "1.1rem" }}>
+                            {item.name}
+                          </p>
                         </div>
-                        <p style={{margin: 0, color: "#CCC", fontSize: "1rem"}}>Breach Count: {item.breachCount}</p>
+                        <p style={{ margin: 0, color: "#CCC", fontSize: "1rem" }}>
+                          Breach Count: {item.breachCount}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -365,7 +380,9 @@ export default function InventoryPerformancePage() {
                   }}
                 >
                   <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>📦</div>
-                  <h4 style={{ color: "#FFF", marginBottom: "1rem" }}>No Inventory Performance Data Found</h4>
+                  <h4 style={{ color: "#FFF", marginBottom: "1rem" }}>
+                    No Inventory Performance Data Found
+                  </h4>
                   <p style={{ color: "#CCC", marginBottom: "1.5rem" }}>
                     No inventory threshold breach data available for the selected date range.
                   </p>
@@ -379,9 +396,9 @@ export default function InventoryPerformancePage() {
                       });
                     }}
                     style={{
-                      backgroundColor: "#FFC107", 
+                      backgroundColor: "#FFC107",
                       borderColor: "#FFC107",
-                      color: "#1E1E2F"
+                      color: "#1E1E2F",
                     }}
                   >
                     Try Last 90 Days
