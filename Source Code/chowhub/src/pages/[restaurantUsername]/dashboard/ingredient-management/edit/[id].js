@@ -1,7 +1,7 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { ManagerOnly } from "@/components/Protected";
 import { Form, Button } from "react-bootstrap";
-import styles from "./EditIngredient.module.css";
+import styles from "./editIngredient.module.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAtomValue, getDefaultStore } from "jotai";

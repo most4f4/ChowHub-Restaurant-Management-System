@@ -1,8 +1,6 @@
-import Badge from "react-bootstrap/Badge";
 import { apiFetch } from "@/lib/api";
-import { Button } from "react-bootstrap";
 import { useEffect } from "react";
-import styles from "./NotificationPopSmall.module.css";
+import styles from "./notificationPopSmall.module.css";
 
 export default function NotificationPopSmall({
   from,
