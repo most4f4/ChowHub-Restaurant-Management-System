@@ -120,16 +120,41 @@ export default function CompletionTimeAnalysis() {
     return "#FF4444"; // Slow - Red
   };
 
-  // Chart configurations
-  const categoryColors = {
-    Appetizers: "#FF6384",
-    "Main Dishes": "#36A2EB",
-    Desserts: "#FFCE56",
-    Drinks: "#4BC0C0",
-    Salads: "#9966FF",
-    Sides: "#FF9F40",
-    default: "#C9CBCF",
+  // With this dynamic function:
+  const generateCategoryColors = (categories) => {
+    const colorPalette = [
+      "#FF6384",
+      "#36A2EB",
+      "#FFCE56",
+      "#4BC0C0",
+      "#9966FF",
+      "#FF9F40",
+      "#FF8A65",
+      "#81C784",
+      "#64B5F6",
+      "#FFB74D",
+      "#F48FB1",
+      "#A5D6A7",
+      "#FFCC02",
+      "#FF7043",
+      "#BA68C8",
+      "#4DB6AC",
+      "#F06292",
+      "#90CAF9",
+    ];
+
+    const colors = {};
+    categories.forEach((category, index) => {
+      colors[category] = colorPalette[index % colorPalette.length];
+    });
+    colors.default = "#C9CBCF";
+
+    return colors;
   };
+
+  const categoryColors = generateCategoryColors(
+    categoryData.categoryCompletionTimes.map((cat) => cat.category || "Uncategorized"),
+  );
 
   // Category completion time chart
   const categoryChartData = {

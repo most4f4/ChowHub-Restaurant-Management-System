@@ -353,8 +353,18 @@ export default function SalesAnalyticsPage() {
     "#4BC0C0",
     "#9966FF",
     "#FF9F40",
-    "#FF6384",
-    "#C9CBCF",
+    "#FF8A65",
+    "#81C784",
+    "#64B5F6",
+    "#FFB74D",
+    "#F48FB1",
+    "#A5D6A7",
+    "#FFCC02",
+    "#FF7043",
+    "#BA68C8",
+    "#4DB6AC",
+    "#F06292",
+    "#90CAF9",
   ];
 
   // Sales comparison bar chart
