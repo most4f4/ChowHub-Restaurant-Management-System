@@ -1,6 +1,6 @@
 import { apiFetch } from "@/lib/api";
 import { useAtomValue } from "jotai";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { useState, useEffect, useRef } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { ManagerOnly } from "@/components/Protected";
@@ -15,6 +15,7 @@ export default function CreateEmployeeForm() {
 
   // Holds warning messages to display if something goes wrong (e.g., duplicate email)
   const [warning, setWarning] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -23,27 +24,35 @@ export default function CreateEmployeeForm() {
     emergencyContact: "",
     username: "",
     role: "",
+    phone: "",
   });
   const [availableUsername, setAvailableUsername] = useState(null);
-  const debouncer = useRef(null); // use debouncer to stop span ping endpoint when not needed
+  const [checkingUsername, setCheckingUsername] = useState(false);
+  const debouncer = useRef(null);
 
   const user = useAtomValue(userAtom);
-  // const token = useAtomValue(tokenAtom);
-  //check username validity
+
+  // Check username validity with loading state
   useEffect(() => {
     if (!form.username) {
       setAvailableUsername(null);
+      setCheckingUsername(false);
       return;
     }
+
+    setCheckingUsername(true);
     clearTimeout(debouncer.current);
+
     debouncer.current = setTimeout(() => {
       async function check() {
         try {
           const available = await checkUniqueUserName(form.username);
-          // console.log("available: ", available);
           setAvailableUsername(available);
         } catch (err) {
           console.error("Failed to check username", err);
+          setAvailableUsername(null);
+        } finally {
+          setCheckingUsername(false);
         }
       }
       check();
@@ -52,16 +61,20 @@ export default function CreateEmployeeForm() {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    // Clear warning when user starts typing
+    if (warning) setWarning("");
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setWarning(""); // Clear previous warnings
+    setWarning("");
+    setIsLoading(true);
 
     // Email validation using a simple regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (form.email && !emailRegex.test(form.email)) {
       setWarning("Please enter a valid email address.");
+      setIsLoading(false);
       return;
     }
 
@@ -72,137 +85,216 @@ export default function CreateEmployeeForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+
       toast.success(`📩 We have sent a verification email to ${form.email}`, {
         position: "top-center",
         autoClose: 5000,
       });
-      console.log(res.message); // Log success message
+
+      console.log(res.message);
       router.push(`/${user.restaurantUsername}/dashboard/user-management`);
     } catch (err) {
-      console.log(err, "error occured while creating new employee");
-      // If the API call fails, show the error message
+      console.log(err, "error occurred while creating new employee");
       setWarning(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <DashboardLayout>
       <ManagerOnly>
-        <h1>Create New Employee</h1>
-        <Form className={styles.formWrapper} onSubmit={handleSubmit}>
-          {/* First Name */}
-          <Form.Group className="mb-3" controlId="formFirstName">
-            <Form.Label>First Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter First Name"
-              required
-              name="firstName"
-              value={form.firstName} 
-              onChange={handleChange}
-              className={styles.employeeLabel}
-            />
-          </Form.Group>
+        <Container fluid>
+          <Row className="justify-content-start">
+            <Col lg={12} xl={10} className="mx-auto">
+              <div className={styles.formWrapper}>
+                <h1>✨ Create New Employee</h1>
 
-          {/* Last Name */}
-          <Form.Group className="mb-3" controlId="formLastName">
-            <Form.Label>Last Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter Last Name"
-              required
-              name="lastName"
-              value={form.lastName} 
-              onChange={handleChange}
-              className={styles.employeeLabel}
-            />
-          </Form.Group>
+                <Form onSubmit={handleSubmit}>
+                  {/* Name Fields Row */}
+                  <Row>
+                    <Col md={6}>
+                      <Form.Group className="mb-3" controlId="formFirstName">
+                        <Form.Label>First Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter first name"
+                          required
+                          name="firstName"
+                          value={form.firstName}
+                          onChange={handleChange}
+                          className={styles.employeeLabel}
+                        />
+                      </Form.Group>
+                    </Col>
 
-          {/* Email */}
-          <Form.Group className="mb-3" controlId="formEmail">
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter Email"
-              required
-              name="email"
-              value={form.email} 
-              onChange={handleChange}
-              className={styles.employeeLabel}
-            />
-          </Form.Group>
+                    <Col md={6}>
+                      <Form.Group className="mb-3" controlId="formLastName">
+                        <Form.Label>Last Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter last name"
+                          required
+                          name="lastName"
+                          value={form.lastName}
+                          onChange={handleChange}
+                          className={styles.employeeLabel}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
 
-          {/* Emergency Contact */}
-          <Form.Group className="mb-3" controlId="formEmergencyContact">
-            <Form.Label>Emergency Contact</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter Emergency Contact"
-              required
-              name="emergencyContact"
-              value={form.emergencyContact}
-              onChange={handleChange}
-              className={styles.employeeLabel}
-            />
-          </Form.Group>
+                  {/* Email */}
+                  <Form.Group className="mb-3" controlId="formEmail">
+                    <Form.Label>📧 Email Address</Form.Label>
+                    <Form.Control
+                      type="email"
+                      placeholder="Enter email address"
+                      required
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      className={styles.employeeLabel}
+                    />
+                  </Form.Group>
+                  {/* Phone Number */}
+                  <Form.Group className="mb-3" controlId="formPhone">
+                    <Form.Label>📱 Phone Number</Form.Label>
+                    <Form.Control
+                      type="tel"
+                      placeholder="Enter phone number"
+                      required
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      className={styles.employeeLabel}
+                    />
+                  </Form.Group>
 
-          {/* Username */}
-          <Form.Group className="mb-3" controlId="formuserName">
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter Username"
-              required
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-              className={styles.employeeLabel}
-              isInvalid={availableUsername === false}
-              isValid={availableUsername === true}
-            />
-            {availableUsername === false && (
-              <Form.Text className="text-danger">Username is already taken</Form.Text>
-            )}
-            {availableUsername === true && (
-              <Form.Text className="text-success">Username is available</Form.Text>
-            )}
-          </Form.Group>
+                  {/* Emergency Contact */}
+                  <Form.Group className="mb-3" controlId="formEmergencyContact">
+                    <Form.Label>🚨 Emergency Contact</Form.Label>
+                    <Form.Control
+                      type="tel"
+                      placeholder="Enter emergency contact number"
+                      required
+                      name="emergencyContact"
+                      value={form.emergencyContact}
+                      onChange={handleChange}
+                      className={styles.employeeLabel}
+                    />
+                  </Form.Group>
 
-          {/* Role (Radio Buttons) */}
-          <Form.Group className="mb-3">
-            <Form.Label>Role</Form.Label>
-            <div key={`inline-radio`} className="d-flex gap-3">
-              <Form.Check
-                inline
-                label="Staff"
-                name="role"
-                type="radio"
-                id={`inline-radio-1`}
-                required
-                value={"staff"}
-                checked={form.role === "staff"}
-                onChange={handleChange}
-              />
-              <Form.Check
-                inline
-                label="Manager"
-                name="role"
-                type="radio"
-                id={`inline-radio-2`}
-                required
-                value={"manager"}
-                checked={form.role === "manager"}
-                onChange={handleChange}
-              />
-            </div>
-          </Form.Group>
+                  {/* Username with enhanced feedback */}
+                  <Form.Group className="mb-3" controlId="formuserName">
+                    <Form.Label>
+                      👤 Username
+                      {checkingUsername && (
+                        <span
+                          style={{ color: "#64ffda", fontSize: "0.8rem", marginLeft: "0.5rem" }}
+                        >
+                          Checking availability...
+                        </span>
+                      )}
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Choose a unique username"
+                      required
+                      name="username"
+                      value={form.username}
+                      onChange={handleChange}
+                      className={styles.employeeLabel}
+                      isInvalid={availableUsername === false}
+                      isValid={availableUsername === true}
+                    />
+                    {availableUsername === false && (
+                      <Form.Text className="text-danger">Username is already taken</Form.Text>
+                    )}
+                    {availableUsername === true && (
+                      <Form.Text className="text-success">Username is available</Form.Text>
+                    )}
+                  </Form.Group>
 
-          {warning && <p className="text-danger">{warning}</p>}
+                  {/* Role Selection with enhanced styling */}
+                  <Form.Group className="mb-3">
+                    <Form.Label>🎯 Role Assignment</Form.Label>
+                    <div className="d-flex gap-4 justify-content-center">
+                      <Form.Check
+                        inline
+                        label="👥 Staff"
+                        name="role"
+                        type="radio"
+                        id="inline-radio-staff"
+                        required
+                        value="staff"
+                        checked={form.role === "staff"}
+                        onChange={handleChange}
+                      />
+                      <Form.Check
+                        inline
+                        label="👔 Manager"
+                        name="role"
+                        type="radio"
+                        id="inline-radio-manager"
+                        required
+                        value="manager"
+                        checked={form.role === "manager"}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </Form.Group>
 
-          <Button variant="primary" type="submit" className={styles.submitButton}>
-            Submit
-          </Button>
-        </Form>
+                  {/* Enhanced warning display */}
+                  {warning && (
+                    <div
+                      className="text-danger mb-3 p-3"
+                      style={{
+                        background: "rgba(255, 107, 107, 0.1)",
+                        borderRadius: "8px",
+                        border: "1px solid rgba(255, 107, 107, 0.3)",
+                      }}
+                    >
+                      <strong>⚠️ {warning}</strong>
+                    </div>
+                  )}
+
+                  {/* Enhanced submit button */}
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    className={styles.submitButton}
+                    disabled={isLoading || availableUsername === false || checkingUsername}
+                  >
+                    {isLoading ? (
+                      <>
+                        <span className="me-2">⏳</span>
+                        Creating Employee...
+                      </>
+                    ) : (
+                      <>
+                        <span className="me-2">🚀</span>
+                        Create Employee
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    type="button"
+                    className={styles.cancelButton}
+                    onClick={() =>
+                      router.push(`/${user.restaurantUsername}/dashboard/user-management`)
+                    }
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                    </svg>
+                    Cancel
+                  </Button>
+                </Form>
+              </div>
+            </Col>
+          </Row>
+        </Container>
       </ManagerOnly>
     </DashboardLayout>
   );

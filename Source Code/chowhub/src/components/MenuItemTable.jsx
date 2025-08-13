@@ -1,131 +1,102 @@
 import React, { useState } from "react";
-import { FaSearch } from "react-icons/fa"; // Import FaSearch icon
+import { FaEdit, FaTrash, FaEye, FaEyeSlash, FaSearch } from "react-icons/fa";
+import Style from "./MenuItemTable.module.css";
 
 export default function MenuItemTable({ items, onEdit, onDelete }) {
   const [expandedRow, setExpandedRow] = useState(null);
 
   const columns = [
-    { header: "Name", accessor: "name" },
-    { header: "Image", accessor: "image" },
-    { header: "Category", accessor: "categoryName" },
-    { header: "Price (Range)", accessor: "priceRange" },
-    { header: "Inventory Controlled", accessor: "isInventoryControlled" },
-    { header: "Variations", accessor: "variations" },
+    { header: "Name", accessor: "name", className: Style.nameColumn },
+    { header: "Image", accessor: "image", className: Style.imageColumn },
+    { header: "Category", accessor: "categoryName", className: Style.categoryColumn },
+    { header: "Price Range", accessor: "priceRange", className: Style.priceColumn },
+    { header: "Inventory", accessor: "isInventoryControlled", className: Style.inventoryColumn },
+    { header: "Variations", accessor: "variations", className: Style.variationsColumn },
+    { header: "Actions", accessor: "actions", className: Style.actionsColumn },
   ];
 
   const renderActions = (item) => (
-    <div style={{ display: "flex", gap: "0.5rem", padding: "0 0.5rem" }}>
+    <div className={Style.actionContainer}>
       <button
         onClick={() => onEdit(item)}
-        style={{
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          color: "#FFF",
-        }}
+        className={`${Style.actionButton} ${Style.editButton}`}
+        title="Edit item"
       >
-        ✏️
+        <FaEdit size={14} />
       </button>
       <button
         onClick={() => onDelete(item)}
-        style={{
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          color: "#FFF",
-        }}
+        className={`${Style.actionButton} ${Style.deleteButton}`}
+        title="Delete item"
       >
-        🗑️
+        <FaTrash size={14} />
       </button>
     </div>
   );
 
   // Helper function to get the correct quantity display for an ingredient
   const getIngredientDisplay = (ingredient) => {
-    // If it's a custom ingredient (which implies track: false)
-    // Note: Based on VariationModal, isCustom:true implies track:false
-    // If unit is provided for the custom ingredient, use quantityUsed + unit
     if (ingredient.track) {
-      // Keeping this check as it's the primary way to identify custom in modal
       return `${ingredient.quantityUsed || 0} ${ingredient.unit || ""}`.trim();
     } else {
-      // For inventory-linked ingredients (which implies track: true), use quantityUsed and unit
-      // Ensure quantityUsed is a number and unit is a string
       if (ingredient.unit) {
         return `${ingredient.quantityUsed || 0} ${ingredient.unit}`;
-      }
-      // Otherwise, use quantityOriginal if available
-      else if (ingredient.quantityOriginal) {
+      } else if (ingredient.quantityOriginal) {
         return ingredient.quantityOriginal;
       }
-      // If neither, just return an empty string (name will be enough)
       return "";
     }
   };
 
+  const getRowClassName = (item, index) => {
+    const { variations = [] } = item;
+
+    const isCritical = variations.some((v) =>
+      v.ingredients?.some((ing) => ing.track && ing.quantityUsed <= ing.threshold),
+    );
+
+    const isLow =
+      !isCritical &&
+      variations.some((v) =>
+        v.ingredients?.some(
+          (ing) =>
+            ing.track &&
+            ing.quantityUsed <= ing.threshold * 1.1 &&
+            ing.quantityUsed > ing.threshold,
+        ),
+      );
+
+    if (isCritical) return `${Style.tableRow} ${Style.tableRowCritical}`;
+    if (isLow) return `${Style.tableRow} ${Style.tableRowLow}`;
+    return `${Style.tableRow} ${index % 2 === 0 ? Style.tableRowEven : Style.tableRowOdd}`;
+  };
+
+  if (!items || items.length === 0) {
+    return (
+      <div className={Style.tableContainer}>
+        <div className={Style.emptyState}>
+          <FaSearch size={40} style={{ marginBottom: "1rem", opacity: 0.5 }} />
+          <p>No menu items found</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div
-      style={{
-        overflowX: "auto",
-        backgroundColor: "#1E1E2F",
-        borderRadius: 8,
-        margin: "0 1rem",
-      }}
-    >
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "separate",
-          borderSpacing: 0,
-        }}
-      >
-        <thead style={{ backgroundColor: "#2A2A3A" }}>
+    <div className={Style.tableContainer}>
+      <table className={Style.table}>
+        <thead className={Style.tableHead}>
           <tr>
             {columns.map((col) => (
-              <th
-                key={col.accessor}
-                style={{
-                  padding: "0.75rem 1rem",
-                  textAlign: "left",
-                  fontSize: "0.9rem",
-                  color: "rgba(255,255,255,0.8)",
-                  fontWeight: 600,
-                  borderBottom: "1px solid #3A3A4A",
-                }}
-              >
+              <th key={col.accessor} className={`${Style.tableHeaderCell} ${col.className}`}>
                 {col.header}
               </th>
             ))}
-            <th style={{ padding: "0.75rem 1rem" }} />
           </tr>
         </thead>
         <tbody>
           {items.map((item, index) => {
-            const isEven = index % 2 === 0;
             const { variations = [] } = item;
-
-            const isCritical = variations.some((v) =>
-              v.ingredients?.some((ing) => ing.track && ing.quantityUsed <= ing.threshold),
-            );
-
-            const isLow =
-              !isCritical &&
-              variations.some((v) =>
-                v.ingredients?.some(
-                  (ing) =>
-                    ing.track &&
-                    ing.quantityUsed <= ing.threshold * 1.1 &&
-                    ing.quantityUsed > ing.threshold,
-                ),
-              );
-
-            const backgroundColor = isCritical
-              ? "rgba(229, 57, 53, 0.2)"
-              : isLow
-                ? "rgba(255, 165, 0, 0.2)"
-                : isEven
-                  ? "transparent"
-                  : "rgba(255,255,255,0.03)";
 
             const prices = variations.map((v) => parseFloat(v.price)).filter((n) => !isNaN(n));
             const priceRange =
@@ -139,106 +110,98 @@ export default function MenuItemTable({ items, onEdit, onDelete }) {
 
             return (
               <React.Fragment key={item._id || index}>
-                <tr
-                  style={{
-                    backgroundColor,
-                    transition: "background 0.2s",
-                    height: "100px",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.08)")
-                  }
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = backgroundColor)}
-                >
-                  <td
-                    style={{
-                      padding: "0.5rem 1rem",
-                      color: "#EEE",
-                      fontSize: "0.95rem",
-                    }}
-                  >
-                    {item.name}
+                <tr className={getRowClassName(item, index)}>
+                  <td className={`${Style.tableCell} ${Style.nameColumn}`}>
+                    <strong>{item.name}</strong>
                   </td>
-                  <td style={{ padding: "0.5rem 1rem" }}>
+                  <td className={`${Style.tableCellCenter} ${Style.imageColumn}`}>
                     {item.image ? (
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        style={{ width: 110, height: 100, borderRadius: 5 }}
-                      />
-                    ) : null}
+                      <img src={item.image} alt={item.name} className={Style.menuImage} />
+                    ) : (
+                      <div style={{ color: "#666", fontStyle: "italic" }}>No image</div>
+                    )}
                   </td>
-                  <td
-                    style={{
-                      padding: "0.5rem 1rem",
-                      color: "#EEE",
-                      fontSize: "0.95rem",
-                    }}
-                  >
+                  <td className={`${Style.tableCell} ${Style.categoryColumn}`}>
                     {item.categoryName}
                   </td>
-                  <td
-                    style={{
-                      padding: "0.5rem 1rem",
-                      color: "#EEE",
-                      fontSize: "0.95rem",
-                    }}
-                  >
-                    {priceRange}
+                  <td className={`${Style.tableCell} ${Style.priceColumn}`}>
+                    <span className={Style.priceRange}>{priceRange}</span>
                   </td>
-                  <td
-                    style={{
-                      padding: "0.5rem 1rem",
-                      color: "#EEE",
-                      fontSize: "0.95rem",
-                    }}
-                  >
-                    {item.isInventoryControlled ? "Yes" : "No"}
+                  <td className={`${Style.tableCellCenter} ${Style.inventoryColumn}`}>
+                    <span
+                      className={`${Style.inventoryBadge} ${
+                        item.isInventoryControlled ? Style.inventoryYes : Style.inventoryNo
+                      }`}
+                    >
+                      {item.isInventoryControlled ? "Yes" : "No"}
+                    </span>
                   </td>
-                  <td style={{ padding: "0.5rem 1rem" }}>
+                  <td className={`${Style.tableCellCenter} ${Style.variationsColumn}`}>
                     <button
                       onClick={() =>
                         setExpandedRow((prev) => (prev === item._id ? null : item._id))
                       }
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: "#4CAF50",
-                        cursor: "pointer",
-                        fontWeight: 600,
-                      }}
+                      className={Style.viewButton}
                     >
-                      {isExpanded ? "Hide" : "View"}
+                      {isExpanded ? (
+                        <>
+                          <FaEyeSlash size={12} style={{ marginRight: "0.25rem" }} />
+                          Hide
+                        </>
+                      ) : (
+                        <>
+                          <FaEye size={12} style={{ marginRight: "0.25rem" }} />
+                          View
+                        </>
+                      )}
                     </button>
                   </td>
-                  <td
-                    style={{
-                      padding: "0.5rem 0.5rem",
-                      textAlign: "center",
-                      width: "100px",
-                    }}
-                  >
+                  <td className={`${Style.tableCellCenter} ${Style.actionsColumn}`}>
                     {renderActions(item)}
                   </td>
                 </tr>
                 {isExpanded &&
                   variations.map((v, vi) => (
-                    <tr key={`v-${item._id}-${vi}`} style={{ backgroundColor: "#282838" }}>
-                      <td colSpan={7} style={{ padding: "1rem", color: "#FFF" }}>
-                        <strong>Variation:</strong> {v.name} — $
-                        {parseFloat(v.price || 0).toFixed(2)} (Cost: $
-                        {parseFloat(v.cost || 0).toFixed(2)})
-                        <br />
-                        <strong>Ingredients:</strong>
-                        <ul style={{ margin: "0.5rem 0 0 1.5rem" }}>
-                          {v.ingredients?.map((ing, ii) => (
-                            <li key={`ing-${ii}`}>
-                              {/* Conditionally render magnifying glass for trackable items */}
-                              {ing.track && <>🔍</>}
-                              {ing.name} — {getIngredientDisplay(ing)}
-                            </li>
-                          ))}
-                        </ul>
+                    <tr key={`v-${item._id}-${vi}`} className={Style.expandedRow}>
+                      <td colSpan={7} className={Style.expandedContent}>
+                        <div className={Style.variationTitle}>
+                          🍽️ <strong>Variation:</strong> {v.name}
+                        </div>
+                        <div style={{ marginBottom: "1rem" }}>
+                          <span className={Style.variationPrice}>
+                            💰 Price: ${parseFloat(v.price || 0).toFixed(2)}
+                          </span>
+                          {" • "}
+                          <span className={Style.variationCost}>
+                            📊 Cost: ${parseFloat(v.cost || 0).toFixed(2)}
+                          </span>
+                        </div>
+
+                        <div className={Style.ingredientsTitle}>
+                          🥘 <strong>Ingredients:</strong>
+                        </div>
+                        {v.ingredients && v.ingredients.length > 0 ? (
+                          <ul className={Style.ingredientsList}>
+                            {v.ingredients.map((ing, ii) => (
+                              <li key={`ing-${ii}`} className={Style.ingredientItem}>
+                                {ing.track && <span className={Style.trackIcon}>🔍</span>}
+                                <span>
+                                  {ing.name}
+                                  {getIngredientDisplay(ing) && (
+                                    <span style={{ color: "#aaa" }}>
+                                      {" — "}
+                                      {getIngredientDisplay(ing)}
+                                    </span>
+                                  )}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p style={{ color: "#888", fontStyle: "italic", marginLeft: "1.5rem" }}>
+                            No ingredients listed
+                          </p>
+                        )}
                       </td>
                     </tr>
                   ))}

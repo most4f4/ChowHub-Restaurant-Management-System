@@ -1,0 +1,400 @@
+/* Main navbar styling */
+.dashboardNavbar {
+  background: #0a0a0f !important;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  padding: 1rem 0;
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Restaurant brand section */
+.restaurantBrand {
+  display: flex !important;
+  align-items: center;
+  gap: 1rem;
+  color: white !important;
+  text-decoration: none !important;
+  padding-left: 2rem;
+}
+
+.restaurantBrand:hover {
+  color: #10b981 !important;
+}
+
+.brandIcon {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.brandInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.restaurantName {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #64ffda;
+}
+
+.roleBadge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+/* User actions section */
+.userActions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-right: 1rem;
+}
+
+/* Welcome message */
+.welcomeMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.welcomeText {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.userName {
+  color: #64ffda;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.1rem;
+}
+
+/* Notification wrapper */
+.notificationWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* User dropdown wrapper */
+.userDropdownWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* User button */
+.userButton {
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border-radius: 50px !important;
+  padding: 0.5rem 1rem !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(10px);
+}
+
+.userButton:hover {
+  background: rgba(100, 255, 218, 0.1) !important;
+  border-color: #64ffda !important;
+  color: #64ffda !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(100, 255, 218, 0.2);
+}
+
+.userButton:focus {
+  box-shadow: 0 0 0 0.2rem rgba(100, 255, 218, 0.25) !important;
+}
+
+.userButtonContent {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.userButtonText {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Quick Actions Dropdown */
+.quickActionsDropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: rgba(15, 15, 25, 0.98);
+  border: 1px solid rgba(100, 255, 218, 0.2);
+  border-radius: 16px;
+  width: 380px;
+  max-height: 600px;
+  overflow: hidden;
+  z-index: 1001;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Dropdown Header */
+.dropdownHeader {
+  background: linear-gradient(135deg, rgba(100, 255, 218, 0.15) 0%, rgba(124, 77, 255, 0.15) 100%);
+  border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdownTitle {
+  color: #64ffda;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.roleIndicator {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Actions Grid */
+.actionsGrid {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Custom Scrollbar */
+.actionsGrid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.actionsGrid::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.actionsGrid::-webkit-scrollbar-thumb {
+  background: rgba(100, 255, 218, 0.3);
+  border-radius: 3px;
+}
+
+.actionsGrid::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 255, 218, 0.5);
+}
+
+/* Quick Action Items */
+.quickActionItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.quickActionItem::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(var(--action-color-rgb, 100, 255, 218), 0.05),
+    transparent
+  );
+  transition: left 0.3s ease;
+}
+
+.quickActionItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(100, 255, 218, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.quickActionItem:hover::before {
+  left: 100%;
+}
+
+.actionIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.actionContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.actionLabel {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.actionDescription {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+/* Dropdown Footer */
+.dropdownFooter {
+  background: linear-gradient(135deg, rgba(30, 30, 47, 0.8) 0%, rgba(42, 42, 58, 0.8) 100%);
+  border-top: 1px solid rgba(100, 255, 218, 0.2);
+  padding: 1rem 1.5rem;
+}
+
+.logoutAction {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 8px;
+  color: #ff6b6b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logoutAction:hover {
+  background: rgba(244, 67, 54, 0.2);
+  border-color: #f44336;
+  transform: translateY(-1px);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .restaurantBrand {
+    padding-left: 1rem;
+  }
+
+  .brandInfo {
+    display: block;
+  }
+
+  .restaurantName {
+    font-size: 1.1rem;
+  }
+
+  .welcomeMessage {
+    display: none;
+  }
+
+  .userActions {
+    gap: 1rem;
+    padding-right: 0.5rem;
+  }
+
+  .userButtonText {
+    display: none;
+  }
+
+  .quickActionsDropdown {
+    width: 320px;
+    right: -20px;
+  }
+
+  .actionContent {
+    gap: 0.15rem;
+  }
+
+  .actionLabel {
+    font-size: 0.9rem;
+  }
+
+  .actionDescription {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboardNavbar {
+    padding: 0.75rem 0;
+  }
+
+  .brandIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .userButton {
+    padding: 0.4rem 0.8rem !important;
+  }
+
+  .quickActionsDropdown {
+    width: 280px;
+    right: -40px;
+  }
+
+  .dropdownHeader {
+    padding: 1rem;
+  }
+
+  .actionsGrid {
+    padding: 0.75rem;
+  }
+
+  .quickActionItem {
+    padding: 0.75rem;
+  }
+
+  .actionIcon {
+    width: 36px;
+    height: 36px;
+  }
+}

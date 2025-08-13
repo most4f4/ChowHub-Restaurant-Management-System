@@ -1,0 +1,95 @@
+/* Main section styles */
+.inventorySection {
+  background-color: #ffffff;
+  padding-top: 150px;
+  padding-bottom: 150px;
+}
+
+.sectionTitle {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.inventoryCard {
+  width: 100%;
+  max-width: 350px;
+  height: 480px;
+  padding: 60px 30px;
+  border-radius: 28px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.inventoryCard:hover {
+  transform: scale(1.03);
+}
+
+.inventoryIcon {
+  width: 140px;
+  height: 140px;
+  margin-bottom: 40px;
+}
+
+.inventoryTitle {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #212121;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+}
+
+.inventoryText {
+  font-size: 1rem;
+  color: #555;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.cardBody {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .inventorySection {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+  }
+
+  .inventoryCard {
+    max-width: 100%;
+    height: auto;
+    padding: 40px 20px;
+  }
+
+  .inventoryIcon {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+  }
+
+  .inventoryTitle {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+
+  .inventoryText {
+    font-size: 0.9rem;
+  }
+}

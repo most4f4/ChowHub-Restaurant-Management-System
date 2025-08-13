@@ -27,19 +27,38 @@
   display: none;
 }
 
-@media only screen and (max-width: 768px) {
-  .carouselItem1 {
-    background-image:
-      linear-gradient(to right, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(/images/1.jpg);
-  }
-
-  .carouselItem2 {
-    background-image:
-      linear-gradient(to right, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(/images/2.jpg);
-  }
-
+@media (max-width: 768px) {
+  .carouselItem1,
+  .carouselItem2,
   .carouselItem3 {
-    background-image:
-      linear-gradient(to right, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(/images/3.jpg);
+    height: 100vh !important;
+    min-height: 600px;
+  }
+
+  .carousel-caption {
+    top: 50% !important;
+    transform: translateY(-50%);
+    position: absolute !important;
+  }
+
+  .carousel-caption h1 {
+    font-size: 2rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .carousel-caption h2 {
+    font-size: 1.2rem !important;
+  }
+
+  .carousel-caption p {
+    font-size: 1rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .carousel-caption .btn {
+    display: block !important;
+    width: 100% !important;
+    margin: 0.5rem 0 !important;
+    padding: 0.75rem !important;
   }
 }

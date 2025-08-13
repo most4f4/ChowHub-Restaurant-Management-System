@@ -1,17 +1,17 @@
-// Source Code\chowhub\src\pages\[restaurantUsername]\dashboard\supplier-management\index.js
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import DashboardLayout from "@/components/DashboardLayout";
 import { ManagerOnly } from "@/components/Protected";
 import SupplierTable from "@/components/SupplierTable";
 import { apiFetch } from "@/lib/api";
-import { Modal, Button, Form, InputGroup, Row, Col } from "react-bootstrap";
+import SummaryCard from "@/components/SummaryCard";
+import { Modal, Button, Form, InputGroup, Row, Col, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useAtomValue, getDefaultStore } from "jotai";
 import { userAtom, tokenAtom } from "@/store/atoms";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
+import styles from "./supplierManagement.module.css";
 
 export default function SupplierManagementPage() {
   const router = useRouter();
@@ -175,126 +175,160 @@ export default function SupplierManagementPage() {
   return (
     <DashboardLayout>
       <ManagerOnly>
-        <h1>🤝 Supplier Management</h1>
+        <div className={styles.container}>
+          {/* Page Header */}
+          <div className={styles.pageHeader}>
+            <h1 className={styles.pageTitle}>🤝 Supplier Management</h1>
+            <p className={styles.pageSubtitle}>
+              Manage your restaurant&apos;s supplier relationships and contacts
+            </p>
+          </div>
 
-        {/* Loading indicator */}
-        {loading && <p style={{ textAlign: "center", color: "#FFF" }}>Loading suppliers…</p>}
-        {/* Error display */}
-        {error && <p style={{ textAlign: "center", color: "#E53935" }}>Error: {error}</p>}
+          {/* Loading State */}
+          {loading && (
+            <div className={styles.loadingContainer}>
+              <Spinner
+                animation="border"
+                variant="light"
+                size="lg"
+                className={styles.loadingSpinner}
+              />
+              <div className={styles.loadingText}>📦 Loading suppliers…</div>
+            </div>
+          )}
 
-        {/* Render content only when not loading OR if loading has finished at least once and there are suppliers */}
-        {(!loading || suppliers.length > 0) && (
-          <>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginBottom: "1rem",
-                paddingRight: "1rem",
-              }}
-            >
-              <Button
-                onClick={() =>
-                  router.push(`/${restaurantUsername}/dashboard/supplier-management/create`)
-                }
-                style={{
-                  backgroundColor: "#388E3C",
-                  color: "#FFF",
-                  border: "none",
-                  padding: "0.5rem 1.25rem",
-                  borderRadius: 4,
-                  fontSize: "1rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
-                Add New Supplier +
+          {/* Error State */}
+          {error && !loading && (
+            <div className={styles.errorContainer}>
+              <div className={styles.errorMessage}>
+                ⚠️ <strong>Error:</strong> {error}
+              </div>
+              <Button onClick={() => window.location.reload()} className={styles.retryButton}>
+                Try Again
               </Button>
             </div>
+          )}
 
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "1rem",
-                padding: "0 1rem",
-              }}
-            >
-              <FontAwesomeIcon icon={faSearch} style={{ marginRight: "0.5rem", color: "#FFF" }} />
-              <input
-                type="text"
-                placeholder="Search suppliers by name, contact, or email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{
-                  flex: 1,
-                  padding: "0.5rem 1rem",
-                  borderRadius: 4,
-                  border: "1px solid #3A3A4A",
-                  backgroundColor: "#2A2A3A",
-                  color: "#FFF",
-                  width: "100%",
-                }}
-              />
-            </div>
-
-            <SupplierTable
-              suppliers={suppliers}
-              onEdit={handleEdit}
-              onDelete={handleDeleteConfirm}
-            />
-
-            {/* Pagination controls */}
-            {totalPages > 1 && (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <button
-                    key={i + 1}
-                    onClick={() => setCurrentPage(i + 1)}
-                    style={{
-                      backgroundColor: currentPage === i + 1 ? "#388E3C" : "#2A2A3A",
-                      color: "#FFF",
-                      border: "none",
-                      padding: "0.5rem 1rem",
-                      margin: "0 0.25rem",
-                      borderRadius: 4,
-                      cursor: "pointer",
-                    }}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
+          {/* Main Content */}
+          {(!loading || suppliers.length > 0) && !error && (
+            <>
+              {/* Summary Section */}
+              {/* Summary Section */}
+              <div className={styles.summarySection}>
+                <SummaryCard label="Total Suppliers" value={totalItems} color="#4dabf7" />
               </div>
-            )}
-          </>
-        )}
 
-        {/* Delete Confirmation Modal */}
-        <Modal show={showDeleteModal} onHide={handleCancelDelete} centered>
-          <Modal.Header closeButton className="bg-dark text-light border-bottom-0">
-            <Modal.Title>Confirm Deletion</Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="bg-dark text-light">
-            <p>
-              Are you sure you want to permanently delete supplier &quot;
-              <strong>{supplierToDelete?.name}</strong>&quot;? This action cannot be undone.
-            </p>
-          </Modal.Body>
-          <Modal.Footer className="bg-dark border-top-0">
-            <Button variant="secondary" onClick={handleCancelDelete}>
-              Cancel
-            </Button>
-            <Button variant="danger" onClick={handleDeleteSupplier}>
-              Confirm
-            </Button>
-          </Modal.Footer>
-        </Modal>
+              {/* Action Bar */}
+              <div className={styles.actionBar}>
+                <div className={styles.statsContainer}>
+                  <div className={styles.statItem}>
+                    <div className={styles.statValue}>{totalItems}</div>
+                    <div className={styles.statLabel}>Suppliers</div>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() =>
+                    router.push(`/${restaurantUsername}/dashboard/supplier-management/create`)
+                  }
+                  className={styles.addButton}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                  </svg>
+                  Add New Supplier
+                </Button>
+              </div>
+
+              {/* Search Section */}
+              <div className={styles.searchSection}>
+                <div className={styles.searchContainer}>
+                  <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
+                  <input
+                    type="text"
+                    placeholder="Search suppliers by name, contact, or email..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className={styles.searchInput}
+                  />
+                </div>
+              </div>
+
+              {/* Suppliers Table */}
+              {suppliers.length === 0 && !loading ? (
+                <div className={styles.tableContainer}>
+                  <div className={styles.emptyState}>
+                    <div className={styles.emptyStateIcon}>📦</div>
+                    <div className={styles.emptyStateTitle}>No suppliers yet</div>
+                    <div className={styles.emptyStateText}>
+                      Start building your supplier network by adding your first supplier
+                    </div>
+                    <div className={styles.emptyStateSubtext}>
+                      Keep track of contacts, orders, and supplier relationships
+                    </div>
+                    <Button
+                      onClick={() =>
+                        router.push(`/${restaurantUsername}/dashboard/supplier-management/create`)
+                      }
+                      className={styles.emptyStateButton}
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                      </svg>
+                      Add Your First Supplier
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.tableContainer}>
+                  <SupplierTable
+                    suppliers={suppliers}
+                    onEdit={handleEdit}
+                    onDelete={handleDeleteConfirm}
+                  />
+                </div>
+              )}
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className={styles.paginationContainer}>
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <button
+                      key={i + 1}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={`${styles.paginationButton} ${
+                        currentPage === i + 1 ? styles.paginationButtonActive : ""
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Delete Confirmation Modal */}
+          <Modal show={showDeleteModal} onHide={handleCancelDelete} centered>
+            <Modal.Header closeButton className="bg-dark text-light border-bottom-0">
+              <Modal.Title>Confirm Deletion</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="bg-dark text-light">
+              <p>
+                Are you sure you want to permanently delete supplier &quot;
+                <strong>{supplierToDelete?.name}</strong>&quot;? This action cannot be undone.
+              </p>
+            </Modal.Body>
+            <Modal.Footer className="bg-dark border-top-0">
+              <Button variant="secondary" onClick={handleCancelDelete}>
+                Cancel
+              </Button>
+              <Button variant="danger" onClick={handleDeleteSupplier}>
+                Delete Supplier
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
       </ManagerOnly>
     </DashboardLayout>
   );

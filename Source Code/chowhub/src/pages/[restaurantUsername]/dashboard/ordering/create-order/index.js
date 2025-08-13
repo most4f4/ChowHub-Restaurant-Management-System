@@ -1,12 +1,21 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { apiFetch } from "@/lib/api";
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Image, Modal, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Form, Image, Modal, Row, Spinner, Badge } from "react-bootstrap";
 import { toast } from "react-toastify";
 import Style from "./createOrder.module.css";
 import AnalyticsBackButton from "@/components/AnalyticsBackButton";
 import { useAtomValue } from "jotai";
 import { userAtom } from "@/store/atoms";
+import {
+  FiShoppingCart,
+  FiRefreshCw,
+  FiTrash2,
+  FiPlus,
+  FiMinus,
+  FiDollarSign,
+  FiMessageSquare,
+} from "react-icons/fi";
 
 export default function CreateOrder() {
   const [cartItems, setCartItems] = useState([]);
@@ -24,6 +33,7 @@ export default function CreateOrder() {
   const [restaurantTaxRate, setRestaurantTaxRate] = useState(13);
   const taxRate = restaurantTaxRate / 100;
   const [submittingOrder, setSubmittingOrder] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const user = useAtomValue(userAtom);
 
   // Extract menu fetching logic into a separate function
@@ -201,10 +211,14 @@ export default function CreateOrder() {
     }
   }
 
+  const filteredCategories = selectedCategory
+    ? categories.filter((cat) => cat._id === selectedCategory)
+    : categories;
+
   return (
     <>
-      {/* Detail view of the item */}
-      {detailViewMenuItem ? (
+      {/* Enhanced Detail View Modal */}
+      {detailViewMenuItem && (
         <Modal
           show={detailViewMenuItem !== null}
           onHide={() => {
@@ -215,104 +229,164 @@ export default function CreateOrder() {
           contentClassName={Style.darkModal}
           size="xl"
         >
-          <Modal.Header contentClassName={Style.darkModalHeader}>
-            <Modal.Title>{detailViewMenuItem?.name}</Modal.Title>
+          <Modal.Header closeButton className={Style.modalHeader}>
+            <Modal.Title className="d-flex align-items-center gap-2">
+              <FiShoppingCart size={20} />
+              {detailViewMenuItem?.name}
+            </Modal.Title>
           </Modal.Header>
-          <Modal.Body contentClassName={Style.darkModalBody}>
-            <div className="text-center mb-3">
-              <Image src={detailViewMenuItem?.image} thumbnail></Image>
-            </div>
-            <p>{detailViewMenuItem?.description}</p>
-            <strong>Quantity:</strong>
-            <input
-              type="number"
-              min="1"
-              className="form-control w-25"
-              value={quantiy}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-            />
-
-            <strong>Choose a variant:</strong>
-            {detailViewMenuItem?.variations?.map((variant) => (
-              <div className="form-check" key={variant._id}>
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="variant"
-                  id={`variant-${variant._id}`}
-                  value={variant._id}
-                  checked={selectedVariantId === variant._id}
-                  disabled={variant.isAvailable === false}
-                  onChange={() => setSelectedVariantId(variant._id)}
+          <Modal.Body className={`${Style.darkModalBody} ${Style.modalBody}`}>
+            <div className="text-center mb-4">
+              <div className={Style.imageContainer}>
+                <Image
+                  src={detailViewMenuItem?.image}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
                 />
-                <label className="form-check-label" htmlFor={`variant-${variant._id}`}>
-                  {variant.name} — ${variant.price}
-                  {!variant.isAvailable && (
-                    <span
+              </div>
+            </div>
+
+            <div className={Style.descriptionBox}>
+              <p className="mb-0" style={{ color: "#e0e0e0", lineHeight: "1.6" }}>
+                {detailViewMenuItem?.description}
+              </p>
+            </div>
+
+            {/* Enhanced Quantity Selector */}
+            <div className="mb-4">
+              <label className="form-label fw-bold mb-3" style={{ color: "#64ffda" }}>
+                Quantity:
+              </label>
+              <div className={Style.quantityControls}>
+                <Button
+                  variant="outline-light"
+                  size="sm"
+                  onClick={() => setQuantity(Math.max(1, quantiy - 1))}
+                  className={Style.quantityButton}
+                >
+                  <FiMinus size={16} />
+                </Button>
+                <span className={Style.quantityDisplay}>{quantiy}</span>
+                <Button
+                  variant="outline-light"
+                  size="sm"
+                  onClick={() => setQuantity(quantiy + 1)}
+                  className={Style.quantityButton}
+                >
+                  <FiPlus size={16} />
+                </Button>
+              </div>
+            </div>
+
+            {/* Enhanced Variant Selection */}
+            <div>
+              <label className="form-label fw-bold mb-3" style={{ color: "#64ffda" }}>
+                Choose a variant:
+              </label>
+              <div className="d-flex flex-column gap-3">
+                {detailViewMenuItem?.variations?.map((variant) => (
+                  <div
+                    key={variant._id}
+                    className={`${Style.variantCard} ${
+                      selectedVariantId === variant._id ? Style.variantCardSelected : ""
+                    } ${!variant.isAvailable ? Style.variantCardDisabled : ""}`}
+                    onClick={() => variant.isAvailable && setSelectedVariantId(variant._id)}
+                  >
+                    <div className="d-flex justify-content-between align-items-start mb-2">
+                      <div className="d-flex align-items-center gap-3">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="variant"
+                          id={`variant-${variant._id}`}
+                          value={variant._id}
+                          checked={selectedVariantId === variant._id}
+                          disabled={variant.isAvailable === false}
+                          onChange={() => setSelectedVariantId(variant._id)}
+                          style={{ transform: "scale(1.2)" }}
+                        />
+                        <div>
+                          <div className="fw-bold mb-1" style={{ color: "#e0e0e0" }}>
+                            {variant.name}
+                          </div>
+                          {!variant.isAvailable && <Badge bg="danger">Out of Stock</Badge>}
+                        </div>
+                      </div>
+                      <div
+                        className="fw-bold d-flex align-items-center gap-1"
+                        style={{
+                          color: "#64ffda",
+                          fontSize: "1.1rem",
+                        }}
+                      >
+                        <FiDollarSign size={16} />
+                        {variant.price}
+                      </div>
+                    </div>
+                    <div
+                      className="small"
                       style={{
-                        color: "#f88",
-                        marginLeft: "0.5rem",
-                        fontWeight: "normal",
-                        fontSize: "0.9rem",
+                        color: "#aaa",
+                        marginLeft: "2rem",
+                        lineHeight: "1.4",
                       }}
                     >
-                      (Out of stock)
-                    </span>
-                  )}
-                </label>
-                <div style={{ fontSize: "0.85rem", color: "#AAA", marginLeft: "1.8rem" }}>
-                  Ingredients:{" "}
-                  {variant.ingredients && variant.ingredients.length > 0
-                    ? variant.ingredients.map((ing) => ing.name).join(", ")
-                    : "No ingredients listed"}
-                </div>
+                      <strong>Ingredients:</strong>{" "}
+                      {variant.ingredients && variant.ingredients.length > 0
+                        ? variant.ingredients.map((ing) => ing.name).join(", ")
+                        : "No ingredients listed"}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </Modal.Body>
-          <Modal.Footer contentClassName={Style.darkModalFooter}>
+          <Modal.Footer className={`${Style.darkModalFooter} ${Style.modalFooter}`}>
             <Button
-              variant="secondary"
+              variant="outline-secondary"
               onClick={() => {
                 setDetailViewMenuItem(null);
                 setSelectedVariantId(null);
               }}
+              className={Style.actionButton}
             >
-              Close
+              Cancel
             </Button>
             <Button
-              variant="primary"
+              variant="success"
               disabled={!selectedVariantId}
-              onClick={() => {
-                addItemToCart();
-              }}
+              onClick={addItemToCart}
+              className={`${Style.actionButton} ${Style.addToCartButton}`}
             >
+              <FiPlus size={16} className="me-2" />
               Add to Cart
             </Button>
           </Modal.Footer>
         </Modal>
-      ) : null}
+      )}
 
       <DashboardLayout>
-        {/* FIXED: Use proper Container with responsive padding */}
-        <div
-          style={{
-            width: "100%",
-            maxWidth: "none",
-            padding: "0",
-            margin: "0",
-          }}
-        >
-          {/* Header with refresh button */}
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <div style={{ marginBottom: "2rem" }}>
-              <AnalyticsBackButton buttonText="Back to ordering" customBackPath="ordering" />
-            </div>
-            <h1 style={{ color: "#CCC", margin: 0 }}>Menu</h1>
+        <div className={Style.mainLayout}>
+          {/* Enhanced Header */}
+          <div
+            className={`d-flex justify-content-between align-items-center ${Style.headerContainer}`}
+          >
+            <AnalyticsBackButton buttonText="← Back to Ordering" customBackPath="ordering" />
+
+            <h1 className={`d-flex align-items-center gap-3 ${Style.headerTitle}`}>
+              <FiShoppingCart size={28} style={{ color: "#64ffda" }} />
+              Restaurant Menu
+            </h1>
+
             <Button
-              variant="outline-secondary"
+              variant="outline-light"
               onClick={fetchMenuData}
               disabled={loading}
               size="sm"
+              className={Style.refreshButton}
             >
               {loading ? (
                 <>
@@ -320,114 +394,89 @@ export default function CreateOrder() {
                   Refreshing...
                 </>
               ) : (
-                "🔄 Refresh Menu"
+                <>
+                  <FiRefreshCw size={16} className="me-2" />
+                  Refresh Menu
+                </>
               )}
             </Button>
           </div>
 
-          {/* FIXED: Use flexbox layout instead of Bootstrap grid */}
-          <div
-            style={{
-              display: "flex",
-              gap: "1.5rem",
-              height: "calc(100vh - 140px)", // Adjust based on your header height
-              overflow: "hidden",
-            }}
-          >
-            {/* Menu Section - Left Side */}
-            <div
-              style={{
-                flex: "1",
-                overflowY: "auto",
-                paddingRight: "1rem",
-              }}
+          {/* Category Filters */}
+          <div className={Style.categoryFilters}>
+            <Button
+              variant="outline-light"
+              onClick={() => setSelectedCategory(null)}
+              className={`${Style.categoryFilter} ${!selectedCategory ? Style.categoryFilterActive : ""}`}
             >
+              All Categories
+            </Button>
+            {categories.map((category) => (
+              <Button
+                key={category._id}
+                variant="outline-light"
+                onClick={() => setSelectedCategory(category._id)}
+                className={`${Style.categoryFilter} ${selectedCategory === category._id ? Style.categoryFilterActive : ""}`}
+              >
+                {category.name}
+              </Button>
+            ))}
+          </div>
+
+          {/* Enhanced Layout */}
+          <div className={Style.contentLayout}>
+            {/* Enhanced Menu Section */}
+            <div className={Style.menuSection}>
               {loading ? (
-                <div className="text-center">
-                  <Spinner animation="border" />
-                  <p className="mt-2" style={{ color: "#CCC" }}>
-                    Loading menu items...
-                  </p>
+                <div className={Style.loadingContainer}>
+                  <Spinner animation="border" style={{ color: "#64ffda" }} />
+                  <p className={Style.loadingText}>Loading delicious menu items...</p>
                 </div>
               ) : (
-                <div className="d-flex flex-column gap-4">
-                  {categories.map((cat) => (
+                <div className={Style.categoriesContainer}>
+                  {filteredCategories.map((cat) => (
                     <div key={cat._id}>
-                      <h2 className="text-center mb-3" style={{ color: "#CCC" }}>
-                        {cat.name}
-                      </h2>
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-                          gap: "1rem",
-                        }}
-                      >
+                      <div className={Style.categoryHeader}>
+                        <h2 className={Style.categoryTitle}>{cat.name}</h2>
+                      </div>
+                      <div className={Style.menuGrid}>
                         {groupedMenuItems[cat._id]?.map((item) => (
                           <div
                             key={item._id}
                             onClick={() => !item.isDisabled && viewSpecificItem(item._id)}
-                            style={{
-                              background: item.isDisabled ? "#444" : "#2A2A3A",
-                              border: "1px solid #444",
-                              color: item.isDisabled ? "#888" : "#CCC",
-                              padding: "1rem",
-                              borderRadius: "0.5rem",
-                              cursor: item.isDisabled ? "not-allowed" : "pointer",
-                              textAlign: "left",
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: "0.5rem",
-                              opacity: item.isDisabled ? 0.5 : 1,
-                              pointerEvents: item.isDisabled ? "none" : "auto",
-                              transition: "all 0.3s ease",
-                              ":hover": !item.isDisabled
-                                ? {
-                                    background: "#3A3A4A",
-                                  }
-                                : {},
-                            }}
+                            className={`${Style.menuItem} ${item.isDisabled ? Style.menuItemDisabled : ""}`}
                           >
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              style={{
-                                borderRadius: "0.5rem",
-                                width: "100%",
-                                height: "180px",
-                                objectFit: "cover",
-                              }}
-                            />
-                            <strong>
-                              {item.name}
+                            <div className={Style.menuItemImage}>
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                className={Style.menuItemImageImg}
+                              />
                               {item.isDisabled && (
-                                <span
-                                  style={{
-                                    color: "#f88",
-                                    marginLeft: "0.5rem",
-                                    fontWeight: "normal",
-                                    fontSize: "0.9rem",
-                                  }}
-                                >
-                                  (Out of stock)
-                                </span>
+                                <div className={Style.outOfStockBadge}>Out of Stock</div>
                               )}
-                            </strong>
-                            <small style={{ color: "#AAA" }}>
-                              Ingredients:{" "}
-                              {item.variations[0]?.ingredients &&
-                              item.variations[0].ingredients.length > 0
-                                ? (() => {
-                                    const fullString = item.variations[0].ingredients
-                                      .map((ing) => ing.name)
-                                      .join(", ");
-                                    const maxLength = 50;
-                                    return fullString.length > maxLength
-                                      ? fullString.slice(0, maxLength) + "..."
-                                      : fullString;
-                                  })()
-                                : "No ingredients listed"}
-                            </small>
+                            </div>
+
+                            <div className={Style.menuItemContent}>
+                              <h5 style={{ color: item.isDisabled ? "#888" : "#fff" }}>
+                                {item.name}
+                              </h5>
+                              <p className={`mb-0 small ${Style.menuItemIngredients}`}>
+                                <strong>Ingredients:</strong>{" "}
+                                {item.variations[0]?.ingredients &&
+                                item.variations[0].ingredients.length > 0
+                                  ? (() => {
+                                      const fullString = item.variations[0].ingredients
+                                        .map((ing) => ing.name)
+                                        .join(", ");
+                                      const maxLength = 60;
+                                      return fullString.length > maxLength
+                                        ? fullString.slice(0, maxLength) + "..."
+                                        : fullString;
+                                    })()
+                                  : "No ingredients listed"}
+                              </p>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -437,60 +486,60 @@ export default function CreateOrder() {
               )}
             </div>
 
-            {/* Cart Section - Right Side (Fixed Width) */}
-            <div
-              style={{
-                width: "350px",
-                flexShrink: 0,
-                overflowY: "auto",
-              }}
-            >
-              <div
-                style={{
-                  background: "#1f1f2a",
-                  padding: "1.5rem",
-                  borderRadius: "8px",
-                  color: "#CCC",
-                  height: "fit-content",
-                  position: "sticky",
-                  top: "0",
-                }}
-              >
-                <h3 style={{ marginBottom: "1rem" }}>Cart</h3>
+            {/* Enhanced Cart Section */}
+            <div className={Style.cartSection}>
+              <div className={Style.cartContainer}>
+                <div className={Style.cartHeader}>
+                  <div className={Style.cartIcon}>
+                    <FiShoppingCart size={20} color="white" />
+                  </div>
+                  <h3 className={Style.cartTitle}>
+                    Cart{" "}
+                    {cartItems.length > 0 && (
+                      <Badge bg="success" className={Style.cartBadge}>
+                        {cartItems.length}
+                      </Badge>
+                    )}
+                  </h3>
+                </div>
+
                 {cartItems.length === 0 ? (
-                  <p style={{ color: "#888", fontStyle: "italic" }}>No items in cart.</p>
+                  <div className={Style.emptyCart}>
+                    <FiShoppingCart size={40} className={Style.emptyCartIcon} />
+                    <p className={Style.emptyCartText}>Your cart is empty</p>
+                    <small className={Style.emptyCartSubtext}>Add some delicious items!</small>
+                  </div>
                 ) : (
-                  <div style={{ marginBottom: "1rem" }}>
+                  <div className={Style.cartItems}>
                     {cartItems.map((entry, idx) => {
                       const item = entry.item;
                       const variant = item.variations.find((v) => v._id === entry.variant);
                       return (
-                        <div
-                          key={idx}
-                          style={{
-                            marginBottom: "1rem",
-                            padding: "0.75rem",
-                            background: "#2A2A3A",
-                            borderRadius: "0.5rem",
-                            border: "1px solid #444",
-                          }}
-                        >
-                          <strong style={{ display: "block", marginBottom: "0.25rem" }}>
-                            {item.name}
-                          </strong>
-                          <div style={{ fontSize: "0.9rem", color: "#AAA" }}>
-                            <div>Variant: {variant?.name || "N/A"}</div>
-                            <div>Quantity: {entry.quantity}</div>
-                            <div>
-                              Price: ${(variant?.price * entry.quantity).toFixed(2) || "0.00"}
+                        <div key={idx} className={Style.cartItem}>
+                          <div className={Style.cartItemHeader}>
+                            <div className={Style.cartItemDetails}>
+                              <h6 className={Style.cartItemName}>{item.name}</h6>
+                              <div className={Style.cartItemMeta}>
+                                <div className="mb-1">
+                                  <strong>Variant:</strong> {variant?.name || "N/A"}
+                                </div>
+                                <div className="mb-1">
+                                  <strong>Quantity:</strong> {entry.quantity}
+                                </div>
+                              </div>
+                            </div>
+                            <div className={Style.cartItemPrice}>
+                              ${(variant?.price * entry.quantity).toFixed(2) || "0.00"}
                             </div>
                           </div>
+
                           <Button
                             size="sm"
-                            variant="danger"
+                            variant="outline-danger"
                             onClick={() => removeItemFromCart(idx)}
-                            style={{ marginTop: "0.5rem" }}
+                            className={Style.removeButton}
                           >
+                            <FiTrash2 size={14} className="me-1" />
                             Remove
                           </Button>
                         </div>
@@ -499,48 +548,74 @@ export default function CreateOrder() {
                   </div>
                 )}
 
-                <div
-                  style={{
-                    borderTop: "1px solid #444",
-                    paddingTop: "1rem",
-                    marginTop: "1rem",
-                  }}
-                >
-                  <div style={{ marginBottom: "0.5rem" }}>
-                    <strong>Subtotal: ${subtotal.toFixed(2)}</strong>
-                  </div>
-                  <div style={{ marginBottom: "0.5rem" }}>
-                    <strong>
-                      Tax (${restaurantTaxRate}%): ${tax.toFixed(2)}
-                    </strong>
-                  </div>
-                  <div style={{ marginBottom: "1rem", fontSize: "1.1rem" }}>
-                    <strong>Total: ${total.toFixed(2)}</strong>
+                {/* Enhanced Order Summary */}
+                <div className={Style.orderSummary}>
+                  <div className={Style.summaryBox}>
+                    <div className={Style.summaryRow}>
+                      <span>Subtotal:</span>
+                      <span style={{ fontWeight: "600" }}>${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div className={Style.summaryRow}>
+                      <span>Tax ({restaurantTaxRate}%):</span>
+                      <span style={{ fontWeight: "600" }}>${tax.toFixed(2)}</span>
+                    </div>
+                    <div className={`${Style.summaryRow} ${Style.summaryTotal}`}>
+                      <span>Total:</span>
+                      <span>${total.toFixed(2)}</span>
+                    </div>
                   </div>
 
-                  <Form.Control
-                    onChange={(e) => setComment(e.target.value)}
-                    type="text"
-                    value={comment}
-                    placeholder="Comments"
-                    style={{ marginBottom: "1rem" }}
-                  />
+                  {/* Enhanced Comment Section */}
+                  <div className={Style.commentSection}>
+                    <label className={Style.commentLabel}>
+                      <FiMessageSquare size={16} />
+                      Special Instructions:
+                    </label>
+                    <Form.Control
+                      onChange={(e) => setComment(e.target.value)}
+                      as="textarea"
+                      rows={3}
+                      value={comment}
+                      placeholder="Any special requests or notes for the kitchen..."
+                      className={Style.commentInput}
+                    />
+                  </div>
 
+                  {/* Enhanced Submit Button */}
                   <Button
-                    variant="success"
                     onClick={() => submitOrder(cartItems)}
                     disabled={cartItems.length === 0 || submittingOrder}
-                    style={{ width: "100%" }}
+                    className={`${Style.submitButton} ${
+                      cartItems.length === 0 || submittingOrder
+                        ? Style.submitButtonDisabled
+                        : Style.submitButtonActive
+                    }`}
                   >
                     {submittingOrder ? (
-                      <>
-                        <Spinner animation="border" size="sm" className="me-2" />
-                        Submitting...
-                      </>
+                      <div className="d-flex align-items-center justify-content-center gap-2">
+                        <Spinner animation="border" size="sm" />
+                        <span>Processing Order...</span>
+                      </div>
+                    ) : cartItems.length === 0 ? (
+                      <div className="d-flex align-items-center justify-content-center gap-2">
+                        <FiShoppingCart size={20} />
+                        <span>Add Items to Order</span>
+                      </div>
                     ) : (
-                      "Submit Order"
+                      <div className="d-flex align-items-center justify-content-center gap-2">
+                        <FiShoppingCart size={20} />
+                        <span>Place Order • ${total.toFixed(2)}</span>
+                      </div>
                     )}
                   </Button>
+
+                  {/* Order Summary Footer */}
+                  {cartItems.length > 0 && (
+                    <div className={Style.orderFooter}>
+                      Review your order before placing • {cartItems.length} item
+                      {cartItems.length !== 1 ? "s" : ""} in cart
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

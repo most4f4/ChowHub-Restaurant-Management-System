@@ -609,7 +609,7 @@ export default function SalesAnalyticsPage() {
   return (
     <DashboardLayout>
       <ManagerOnly>
-        <div style={{ padding: "1rem" }}>
+        <div style={{ padding: "2rem" }}>
           <div style={{ marginBottom: "2rem" }}>
             <AnalyticsBackButton />
           </div>

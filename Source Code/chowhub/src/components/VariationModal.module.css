@@ -1,0 +1,358 @@
+/* Variation Modal Styles */
+.modalOverlay {
+  background: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(5px);
+}
+
+.modalDialog {
+  max-width: 900px !important;
+}
+
+.modalContent {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+}
+
+.modalHeader {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px 16px 0 0 !important;
+  padding: 1.5rem 2rem !important;
+}
+
+.modalTitle {
+  color: #fff !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+}
+
+.modalCloseButton {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+}
+
+.modalCloseButton:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: scale(1.1) !important;
+}
+
+.modalBody {
+  padding: 2rem !important;
+  color: #fff !important;
+}
+
+.modalFooter {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0 0 16px 16px !important;
+  padding: 1.5rem 2rem !important;
+  display: flex !important;
+  gap: 1rem !important;
+  justify-content: flex-end !important;
+}
+
+/* Form Elements */
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formLabel {
+  color: #fff !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.75rem !important;
+  font-size: 1rem !important;
+}
+
+.formControl {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
+  color: #fff !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.formControl:focus {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: #4dabf7 !important;
+  box-shadow: 0 0 0 0.2rem rgba(77, 171, 247, 0.25) !important;
+  color: #fff !important;
+}
+
+.formControl::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.formSelect {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
+  color: #fff !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.formSelect:focus {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: #4dabf7 !important;
+  box-shadow: 0 0 0 0.2rem rgba(77, 171, 247, 0.25) !important;
+  color: #fff !important;
+}
+
+.formSelect option {
+  background: #2a2a3a !important;
+  color: #fff !important;
+}
+
+/* Section Divider */
+.sectionDivider {
+  border: none !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent) !important;
+  margin: 2rem 0 !important;
+}
+
+.sectionTitle {
+  color: #fff !important;
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 1.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.sectionIcon {
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+/* Ingredient Card */
+.ingredientCard {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  padding: 1.5rem !important;
+  margin-bottom: 1rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.ingredientCard:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.ingredientCardHeader {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 1rem !important;
+}
+
+.ingredientNumber {
+  background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%) !important;
+  color: #fff !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+}
+
+.ingredientActions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+}
+
+.checkboxGroup {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+
+.customCheckbox {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  margin: 0 !important;
+}
+
+.customCheckbox input[type="checkbox"] {
+  width: 18px !important;
+  height: 18px !important;
+  accent-color: #4dabf7 !important;
+}
+
+.customCheckbox label {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+}
+
+.removeButton {
+  background: linear-gradient(135deg, #ff6b6b 0%, #fa5252 100%) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  color: #fff !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+}
+
+.removeButton:hover {
+  background: linear-gradient(135deg, #fa5252 0%, #e03131 100%) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Input Group Enhancement */
+.inputGroupWithIcon {
+  position: relative;
+}
+
+.inputGroupIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Quantity Display */
+.quantityDisplay {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.quantityDisplayLabel {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  margin-right: 0.5rem;
+}
+
+/* Add Ingredient Button */
+.addIngredientButton {
+  background: linear-gradient(135deg, #51cf66 0%, #40c057 100%) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1.5rem !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+  justify-content: center !important;
+}
+
+.addIngredientButton:hover {
+  background: linear-gradient(135deg, #40c057 0%, #37b24d 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(81, 207, 102, 0.4) !important;
+}
+
+/* Modal Buttons */
+.cancelButton {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1.5rem !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.cancelButton:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: #fff !important;
+}
+
+.saveButton {
+  background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 2rem !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.saveButton:hover {
+  background: linear-gradient(135deg, #339af0 0%, #228be6 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(77, 171, 247, 0.4) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modalDialog {
+    max-width: 95% !important;
+    margin: 1rem !important;
+  }
+
+  .modalHeader,
+  .modalBody,
+  .modalFooter {
+    padding: 1rem !important;
+  }
+
+  .ingredientCard {
+    padding: 1rem !important;
+  }
+
+  .modalFooter {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+
+  .cancelButton,
+  .saveButton {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .ingredientActions {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+  }
+
+  .checkboxGroup {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+}

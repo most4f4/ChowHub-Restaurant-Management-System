@@ -16,6 +16,7 @@ export default function CreateIngredientForm() {
   const token = store.get(tokenAtom);
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const { restaurantUsername } = router.query;
 
   const unitList = [
     "kg",
@@ -128,7 +129,7 @@ export default function CreateIngredientForm() {
       if (searchTerm.trim() !== "") {
         try {
           const res = await fetch(
-            `https://api.spoonacular.com/food/ingredients/search?query=${searchTerm}&number=5&apiKey=${process.env.NEXT_PUBLIC_SPOONACULARE_API_KEY2}`,
+            `https://api.spoonacular.com/food/ingredients/search?query=${searchTerm}&number=20&apiKey=${process.env.NEXT_PUBLIC_SPOONACULARE_API_KEY2}`,
           );
           const data = await res.json();
           setSuggestions(data.results);
@@ -139,6 +140,8 @@ export default function CreateIngredientForm() {
         setSuggestions([]);
       }
     }, 400);
+
+    return () => clearTimeout(timeoutId);
   }, [searchTerm]);
 
   const handleSelectSuggestion = async (item) => {
@@ -155,123 +158,250 @@ export default function CreateIngredientForm() {
     }
   };
 
+  const handleCancel = () => {
+    router.push(`/${restaurantUsername}/dashboard/ingredient-management`);
+  };
+
   return (
     <DashboardLayout>
       <ManagerOnly>
-        <h1>Create New Ingredient</h1>
+        <div className={styles.container}>
+          {/* Page Header */}
+          <div className={styles.pageHeader}>
+            <h1 className={styles.pageTitle}>Create New Ingredient</h1>
+            <p className={styles.pageSubtitle}>
+              Add ingredients to your restaurant&apos;s inventory
+            </p>
+          </div>
 
-        <Form className={styles.formWrapper} onSubmit={handleSubmit}>
-          {/* Spoonacular Search Field */}
-          <Form.Group controlId="spoonacularSearch">
-            <Form.Label>Search Ingredient</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Search from Spoonacular..."
-              className={styles.ingredientLabel}
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </Form.Group>
-          {Array.isArray(suggestions) && suggestions.length > 0 && (
-            <ul className={`list-group mt-2 ${styles.suggestionsList}`}>
-              {suggestions.map((item) => (
-                <li
-                  key={item.id}
-                  className={`list-group-item list-group-item-action d-flex align-items-center ${styles.suggestionsListItem}`}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => handleSelectSuggestion(item)}
-                >
-                  <img
-                    src={`https://spoonacular.com/cdn/ingredients_100x100/${item.image}`}
-                    alt={item.name}
-                    style={{ width: 40, height: 40, objectFit: "cover", marginRight: "1rem" }}
+          <Form className={styles.formWrapper} onSubmit={handleSubmit}>
+            {/* Spoonacular Search Section */}
+            <div className={styles.searchSection}>
+              <Form.Group controlId="spoonacularSearch">
+                <Form.Label className={styles.searchLabel}>
+                  <span className={styles.searchIcon}>🔍</span>
+                  Search Ingredient Database
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Search from Spoonacular database..."
+                  className={styles.searchInput}
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+                <Form.Text className={styles.formText}>
+                  Find ingredients from our comprehensive database to auto-fill details
+                </Form.Text>
+              </Form.Group>
+
+              {Array.isArray(suggestions) && suggestions.length > 0 && (
+                <ul className={`list-group ${styles.suggestionsList}`}>
+                  {suggestions.map((item) => (
+                    <li
+                      key={item.id}
+                      className={`list-group-item ${styles.suggestionsListItem}`}
+                      onClick={() => handleSelectSuggestion(item)}
+                    >
+                      <img
+                        src={`https://spoonacular.com/cdn/ingredients_100x100/${item.image}`}
+                        alt={item.name}
+                        className={styles.suggestionImage}
+                      />
+                      <span className={styles.suggestionName}>{item.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {/* Basic Information Section */}
+            <div className={styles.formSection}>
+              <h3 className={styles.sectionTitle}>
+                <span className={styles.sectionIcon}>📝</span>
+                Basic Information
+              </h3>
+
+              {/* Name */}
+              <Form.Group className={styles.formGroup} controlId="formIngredName">
+                <Form.Label className={styles.formLabel}>Ingredient Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter ingredient name"
+                  required
+                  name="name"
+                  value={form.name}
+                  className={styles.formControl}
+                  onChange={handleChange}
+                />
+                <Form.Text className={styles.formText}>
+                  Name of the ingredient must be unique in your inventory
+                </Form.Text>
+              </Form.Group>
+
+              {/* Image Upload */}
+              <Form.Group className={styles.formGroup} controlId="formIngredImage">
+                <Form.Label className={styles.formLabel}>Image Upload</Form.Label>
+                <Form.Control
+                  type="file"
+                  name="imageFile"
+                  className={styles.fileUploadInput}
+                  accept="image/*"
+                  onChange={(e) => setForm({ ...form, imageFile: e.target.files[0] })}
+                />
+                <Form.Text className={styles.formText}>
+                  Upload a clear image of the ingredient (JPG, PNG, WebP)
+                </Form.Text>
+              </Form.Group>
+            </div>
+
+            {/* Quantity & Unit Section */}
+            <div className={styles.formSection}>
+              <h3 className={styles.sectionTitle}>
+                <span className={styles.sectionIcon}>📊</span>
+                Quantity & Measurements
+              </h3>
+
+              <div className={styles.inputRow}>
+                {/* Unit */}
+                <Form.Group className={styles.formGroup}>
+                  <Form.Label className={styles.formLabel}>Unit of Measurement</Form.Label>
+                  <Form.Select
+                    required
+                    name="unit"
+                    value={form.unit}
+                    onChange={handleChange}
+                    className={styles.formSelect}
+                  >
+                    <option value="">Select a unit</option>
+                    {unitList.map((unit) => (
+                      <option key={unit} value={unit}>
+                        {unit}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+
+                {/* Quantity */}
+                <Form.Group className={styles.formGroup} controlId="formIngredQuantity">
+                  <Form.Label className={styles.formLabel}>Current Stock Quantity</Form.Label>
+                  <Form.Control
+                    type="number"
+                    required
+                    step="any"
+                    min={0}
+                    name="quantity"
+                    value={form.quantity}
+                    className={styles.formControl}
+                    placeholder="0.00"
+                    onChange={handleChange}
                   />
-                  {item.name}
-                </li>
-              ))}
-            </ul>
-          )}
+                </Form.Group>
+              </div>
 
-          <br />
+              {/* Threshold */}
+              <Form.Group className={styles.formGroup} controlId="formIngredThreshold">
+                <Form.Label className={styles.formLabel}>Low Stock Threshold</Form.Label>
+                <Form.Control
+                  type="number"
+                  required
+                  min={0}
+                  step="any"
+                  name="threshold"
+                  value={form.threshold}
+                  className={styles.formControl}
+                  placeholder="0.00"
+                  onChange={handleChange}
+                />
+                <Form.Text className={styles.formText}>
+                  You&apos;ll receive alerts when stock falls below this amount
+                </Form.Text>
+              </Form.Group>
+            </div>
 
-          {/* Name */}
-          <Form.Group className="mb-3" controlId="formIngredName">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter Ingredient name"
-              required
-              name="name"
-              value={form.name}
-              className={styles.ingredientLabel}
-              onChange={handleChange}
-            />
-            <Form.Text style={{ color: "#ccc" }}>Name of the Ingredient must be unique.</Form.Text>
-          </Form.Group>
+            {/* Preview Section */}
+            {(form.name || form.imageUrlFromSpoonacular) && (
+              <div className={styles.previewSection}>
+                <h3 className={styles.previewTitle}>
+                  <span className={styles.sectionIcon}>👁️</span>
+                  Preview
+                </h3>
+                <div className={styles.previewContent}>
+                  {form.imageUrlFromSpoonacular && (
+                    <img
+                      src={form.imageUrlFromSpoonacular}
+                      alt={form.name}
+                      className={styles.previewImage}
+                    />
+                  )}
+                  <div className={styles.previewDetails}>
+                    {form.name && (
+                      <div className={styles.previewItem}>
+                        <span className={styles.previewLabel}>Name:</span>
+                        <span className={styles.previewValue}>{form.name}</span>
+                      </div>
+                    )}
+                    {form.unit && (
+                      <div className={styles.previewItem}>
+                        <span className={styles.previewLabel}>Unit:</span>
+                        <span className={styles.previewValue}>{form.unit}</span>
+                      </div>
+                    )}
+                    {form.quantity > 0 && (
+                      <div className={styles.previewItem}>
+                        <span className={styles.previewLabel}>Stock:</span>
+                        <span className={styles.previewValue}>
+                          {form.quantity} {form.unit}
+                        </span>
+                      </div>
+                    )}
+                    {form.threshold > 0 && (
+                      <div className={styles.previewItem}>
+                        <span className={styles.previewLabel}>Alert at:</span>
+                        <span className={styles.previewValue}>
+                          {form.threshold} {form.unit}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
 
-          {/* Image */}
-          <Form.Group className="mb-3" controlId="formIngredImage">
-            <Form.Label>Image</Form.Label>
-            <Form.Control
-              type="file"
-              name="imageFile"
-              onChange={(e) => setForm({ ...form, imageFile: e.target.files[0] })}
-            />
-            <Form.Text style={{ color: "#ccc" }}>
-              This should be a relative path or full image URL.
-            </Form.Text>
-          </Form.Group>
+            {/* Warning Message */}
+            {warning && (
+              <div className={styles.warning}>
+                <span className={styles.warningIcon}>⚠️</span>
+                {warning}
+              </div>
+            )}
 
-          {/* Unit */}
-          <Form.Group className="mb-3">
-            <Form.Label>Unit</Form.Label>
-            <Form.Select required name="unit" value={form.unit} onChange={handleChange}>
-              <option value="">Select a unit</option>
-              {unitList.map((unit) => (
-                <option key={unit} value={unit}>
-                  {unit}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
+            {/* Submit Button */}
+            <div className={styles.buttonContainer}>
+              <Button variant="primary" type="submit" className={styles.submitButton}>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  style={{ marginRight: "0.5rem" }}
+                >
+                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                </svg>
+                Create Ingredient
+              </Button>
 
-          {/* Quantity */}
-          <Form.Group className="mb-3" controlId="formIngredQuantity">
-            <Form.Label>Quantity in Stock</Form.Label>
-            <Form.Control
-              type="number"
-              required
-              step="any" // ← allows decimals like 4.555
-              min={0}
-              name="quantity"
-              value={form.quantity}
-              onChange={handleChange}
-            />
-          </Form.Group>
-
-          {/* Threshold */}
-          <Form.Group className="mb-3" controlId="formIngredThreshold">
-            <Form.Label>Threshold (Low-Stock Warning)</Form.Label>
-            <Form.Control
-              type="number"
-              required
-              min={0}
-              step="any"
-              name="threshold"
-              value={form.threshold}
-              onChange={handleChange}
-            />
-            <Form.Text style={{ color: "#ccc" }}>
-              If quantity drops below this number, a notification will be triggered.
-            </Form.Text>
-          </Form.Group>
-
-          {warning && <p className="text-danger">{warning}</p>}
-
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Form>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={handleCancel}
+                className={styles.cancelButton}
+              >
+                <span className="me-2">❌</span>
+                Cancel
+              </Button>
+            </div>
+          </Form>
+        </div>
       </ManagerOnly>
     </DashboardLayout>
   );

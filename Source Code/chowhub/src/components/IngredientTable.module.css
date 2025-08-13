@@ -1,0 +1,444 @@
+/* IngredientTable Component Styles */
+
+.tableContainer {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  margin: 0;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+  table-layout: fixed;
+}
+
+.tableHeader {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+}
+
+.headerCell {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nameColumn {
+  width: 25%;
+}
+
+.imageColumn {
+  width: 15%;
+}
+
+.unitColumn {
+  width: 12%;
+}
+
+.quantityColumn {
+  width: 15%;
+}
+
+.thresholdColumn {
+  width: 15%;
+}
+
+.statusColumn {
+  width: 12%;
+}
+
+.actionsColumn {
+  width: 6%;
+}
+
+.tableRow {
+  transition: all 0.3s ease;
+  height: 100px;
+}
+
+.tableRow:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  transform: translateY(-1px);
+}
+
+.tableCell {
+  padding: 0.75rem 1.5rem;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.imageCell {
+  padding: 0.5rem 1.5rem;
+}
+
+.ingredientImage {
+  width: 110px;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.ingredientImage:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.02);
+}
+
+.noImage {
+  width: 110px;
+  height: 100px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.nameCell {
+  font-weight: 600;
+  color: #fff;
+}
+
+.quantityCell {
+  font-family:
+    "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  font-weight: 500;
+}
+
+.thresholdCell {
+  font-family:
+    "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.unitCell {
+  font-size: 0.9rem;
+  color: #4dabf7;
+  font-weight: 500;
+}
+
+/* Stock Status Indicators */
+.statusIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusCritical {
+  background: rgba(229, 57, 53, 0.2);
+  color: #ef5350;
+  border: 1px solid rgba(229, 57, 53, 0.3);
+}
+
+.statusWarning {
+  background: rgba(255, 165, 0, 0.2);
+  color: #ffb74d;
+  border: 1px solid rgba(255, 165, 0, 0.3);
+}
+
+.statusGood {
+  background: rgba(76, 175, 80, 0.2);
+  color: #81c784;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+/* Row Background Colors Based on Status */
+.rowCritical {
+  background: rgba(229, 57, 53, 0.08) !important;
+  border-left: 4px solid #e53935;
+}
+
+.rowWarning {
+  background: rgba(255, 165, 0, 0.08) !important;
+  border-left: 4px solid #ffa500;
+}
+
+.rowNormal {
+  background: transparent;
+}
+
+.rowEven {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Actions */
+.actionsCell {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  width: 120px;
+}
+
+.actionsContainer {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.actionButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.editButton {
+  color: #4dabf7;
+  background: rgba(77, 171, 247, 0.1);
+}
+
+.editButton:hover {
+  background: rgba(77, 171, 247, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(77, 171, 247, 0.3);
+}
+
+.deleteButton {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.deleteButton:hover {
+  background: rgba(255, 107, 107, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.actionIcon {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.emptyStateIcon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.3;
+}
+
+.emptyStateTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.emptyStateText {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Table Stats Footer */
+.tableFooter {
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footerStats {
+  display: flex;
+  gap: 2rem;
+}
+
+.footerStat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footerStatValue {
+  font-weight: 600;
+  color: #4dabf7;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .headerCell,
+  .tableCell {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .ingredientImage,
+  .noImage {
+    width: 80px;
+    height: 70px;
+  }
+
+  .actionsContainer {
+    gap: 0.5rem;
+  }
+
+  .actionButton {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tableContainer {
+    border-radius: 12px;
+  }
+
+  .headerCell,
+  .tableCell {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .ingredientImage,
+  .noImage {
+    width: 60px;
+    height: 50px;
+  }
+
+  .tableRow {
+    height: 70px;
+  }
+
+  .footerStats {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 576px) {
+  .actionsContainer {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .actionButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .actionIcon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .tableFooter {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+}
+
+/* Accessibility */
+.actionButton:focus {
+  outline: 2px solid #4dabf7;
+  outline-offset: 2px;
+}
+
+.actionButton:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .tableContainer {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .headerCell,
+  .tableCell {
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .actionButton {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .tableRow,
+  .actionButton,
+  .ingredientImage {
+    transition: none;
+  }
+
+  .tableRow:hover {
+    transform: none;
+  }
+
+  .actionButton:hover {
+    transform: none;
+  }
+
+  .ingredientImage:hover {
+    transform: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .tableContainer {
+    background: white;
+    color: black;
+    border: 1px solid black;
+    box-shadow: none;
+  }
+
+  .headerCell,
+  .tableCell {
+    color: black;
+    border-bottom: 1px solid black;
+  }
+
+  .actionsContainer {
+    display: none;
+  }
+
+  .statusIndicator {
+    background: white;
+    border: 1px solid black;
+    color: black;
+  }
+}

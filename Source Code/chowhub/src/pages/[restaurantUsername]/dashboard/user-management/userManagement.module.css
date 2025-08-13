@@ -1,0 +1,397 @@
+/* Main container */
+.pageContainer {
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+/* Header section */
+.headerSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.headerIcon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+  flex-shrink: 0;
+}
+
+.headerTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #49a94d;
+}
+
+.headerSubtitle {
+  color: #a8b2c1;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Summary cards container */
+.summaryContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summaryCard {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.summaryCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.summaryCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--card-color);
+  border-radius: 16px 16px 0 0;
+}
+
+.cardContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cardIcon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--card-color);
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 1.5rem;
+}
+
+.cardInfo {
+  flex: 1;
+}
+
+.cardValue {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--card-color);
+  margin-bottom: 0.25rem;
+}
+
+.cardLabel {
+  color: #a8b2c1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Action bar */
+.actionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+}
+
+.actionBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.searchContainer {
+  position: relative;
+}
+
+.searchInput {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  color: white;
+  font-size: 0.95rem;
+  width: 300px;
+  transition: all 0.3s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.filterButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.filterButton option {
+  background: #303349;
+  color: white;
+  padding: 0.5rem;
+  border: none;
+}
+
+.filterButton:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+.filterButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #4caf50;
+}
+
+.createButton {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 0.875rem 2rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.createButton:hover {
+  background: linear-gradient(135deg, #45a049 0%, #388e3c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+}
+
+.createButton:active {
+  transform: translateY(0);
+}
+
+/* Table container */
+.tableContainer {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.tableHeader {
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+}
+
+.tableHeaderTitle {
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Loading state */
+.loadingContainer {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(76, 175, 80, 0.3);
+  border-top: 3px solid #4caf50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1.5rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingTitle {
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.loadingSubtitle {
+  color: #a8b2c1;
+  margin: 0;
+}
+
+/* Edit button enhancement */
+.editButton {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 8px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffc107;
+  font-size: 1.1rem;
+}
+
+.editButton:hover {
+  background: rgba(255, 193, 7, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+/* Status badges */
+.statusBadge {
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusActive {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.statusInactive {
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+.roleBadge {
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.roleManager {
+  background: rgba(102, 126, 234, 0.2);
+  color: #667eea;
+  border: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+.roleStaff {
+  background: rgba(156, 39, 176, 0.2);
+  color: #9c27b0;
+  border: 1px solid rgba(156, 39, 176, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 1rem;
+  }
+
+  .headerTitle {
+    font-size: 2rem;
+  }
+
+  .actionBar {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .actionBarLeft {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .summaryContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .headerSection {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cardContent {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .createButton {
+    width: 100%;
+    justify-content: center;
+  }
+}

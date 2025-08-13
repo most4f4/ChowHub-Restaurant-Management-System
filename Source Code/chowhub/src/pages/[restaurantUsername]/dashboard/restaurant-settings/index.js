@@ -1,23 +1,42 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
 import { apiFetch } from "@/lib/api";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Container, Row, Col, Card, Badge, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import DashboardLayout from "@/components/DashboardLayout";
 import { ManagerOnly } from "@/components/Protected";
-import { FiEdit2, FiHash, FiHome, FiMapPin } from "react-icons/fi";
+import styles from "./restaurantSettings.module.css";
+import {
+  FiEdit2,
+  FiHash,
+  FiHome,
+  FiMapPin,
+  FiPercent,
+  FiSave,
+  FiX,
+  FiSettings,
+  FiCheck,
+  FiClock,
+} from "react-icons/fi";
 
 export default function RestaurantSettings() {
   const router = useRouter();
   const user = useAtomValue(userAtom);
+  const setUser = useSetAtom(userAtom);
   const isManager = user?.role === "manager";
 
-  const [form, setForm] = useState({ name: "", username: "", location: "", taxRatePercent: 13 });
+  const [form, setForm] = useState({
+    name: "",
+    username: "",
+    location: "",
+    taxRatePercent: 13,
+  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [editing, setEditing] = useState(false); // 👈 Toggle for edit mode
+  const [editing, setEditing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
 
   useEffect(() => {
     if (!user?.restaurantId) return;
@@ -33,9 +52,11 @@ export default function RestaurantSettings() {
             location: res.restaurant.location || "",
             taxRatePercent: res.restaurant.taxRatePercent || 13,
           });
+          setLastUpdated(res.restaurant.updatedAt || new Date().toISOString());
         }
       } catch (err) {
         console.error("Failed to fetch restaurant settings", err);
+        toast.error("Failed to load restaurant settings");
       } finally {
         setLoading(false);
       }
@@ -51,21 +72,27 @@ export default function RestaurantSettings() {
     e.preventDefault();
     setSaving(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/restaurant/${user.restaurantId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(form),
-        },
+      const res = await apiFetch(`/restaurant/${user.restaurantId}`, {
+        method: "PUT",
+        body: JSON.stringify(form),
+      });
+      toast.success("✅ Restaurant profile updated successfully!");
+
+      setUser((prevUser) => ({
+        ...prevUser,
+        restaurantName: form.name,
+      }));
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...user,
+          restaurantName: form.name,
+        }),
       );
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Failed to update");
-      toast.success("✅ Restaurant profile updated");
-      setEditing(false); // Exit edit mode after saving
+
+      setEditing(false);
+      setLastUpdated(new Date().toISOString());
     } catch (err) {
       toast.error(err.message || "Update failed");
     } finally {
@@ -73,115 +100,258 @@ export default function RestaurantSettings() {
     }
   };
 
+  const handleCancel = () => {
+    setEditing(false);
+    // Reset form to original values by refetching
+    if (user?.restaurantId) {
+      apiFetch(`/restaurant/${user.restaurantId}`).then((res) => {
+        if (res.restaurant) {
+          setForm({
+            name: res.restaurant.name || "",
+            username: res.restaurant.username || "",
+            location: res.restaurant.location || "",
+            taxRatePercent: res.restaurant.taxRatePercent || 13,
+          });
+        }
+      });
+    }
+  };
+
   return (
     <DashboardLayout>
       <ManagerOnly>
-        <h1>Restaurant Settings</h1>
-        {loading ? (
-          <p>Loading settings...</p>
-        ) : (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              margin: "1.5rem 0",
-              gap: "2rem",
-            }}
-          >
-            <div
-              style={{
-                flex: 1.5,
-                backgroundColor: "#1E1E2F",
-                padding: "1rem",
-                borderRadius: 8,
-              }}
-            >
-              {!editing ? (
-                <>
-                  <div className="d-flex justify-content-between align-items-start">
-                    <div>
-                      <h5 className="d-flex align-items-center gap-2">
-                        <FiHome /> {form.name}
-                      </h5>
-                      <p>
-                        <FiHash /> <strong>Username:</strong> {form.username}
-                      </p>
-                      <p>
-                        <FiMapPin /> <strong>Location:</strong> {form.location || "—"}
-                      </p>
-                      <p>
-                        <strong>% Tax Rate:</strong> {form.taxRatePercent ?? "—"}%
-                      </p>
-                    </div>
-                    <Button
-                      variant="outline-light"
-                      size="sm"
-                      onClick={() => setEditing(true)}
-                      title="Edit Restaurant Info"
-                    >
-                      <FiEdit2 />
-                    </Button>
-                  </div>
-                </>
-              ) : (
-                <div className="d-flex justify-content-between align-items-start">
-                  <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="formName">
-                      <Form.Label>Restaurant Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        required
-                        name="name"
-                        value={form.name}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formUsername">
-                      <Form.Label>Restaurant Username</Form.Label>
-                      <Form.Control
-                        type="text"
-                        required
-                        name="username"
-                        value={form.username}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formLocation">
-                      <Form.Label>Location</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="location"
-                        value={form.location}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formTaxRate">
-                      <Form.Label>Tax Rate</Form.Label>
-                      <Form.Control
-                        type="number"
-                        name="taxRatePercent"
-                        value={form.taxRatePercent}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <div className="d-flex gap-2">
-                      <Button type="submit" disabled={saving}>
-                        {saving ? "Saving..." : "Save Changes"}
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        onClick={() => setEditing(false)}
-                        disabled={saving}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </Form>
+        <div className={styles.pageContainer}>
+          <Container fluid>
+            {/* Header Section */}
+            <div className={styles.headerSection}>
+              <div className={styles.headerIconWrapper}>
+                <div className={styles.headerIcon}>
+                  <FiSettings size={24} />
                 </div>
+                <div className={styles.headerContent}>
+                  <h1>Restaurant Settings</h1>
+                  <p className={styles.headerSubtitle}>
+                    Manage your restaurant profile and configuration
+                  </p>
+                </div>
+              </div>
+
+              {lastUpdated && (
+                <p className={styles.lastUpdated}>
+                  Last updated: {new Date(lastUpdated).toLocaleDateString()}
+                </p>
               )}
             </div>
-          </div>
-        )}
+
+            {loading ? (
+              <Card className={styles.loadingCard}>
+                <Card.Body>
+                  <div className={styles.loadingContent}>
+                    <Spinner animation="border" variant="primary" className="mb-3" />
+                    <p className={styles.loadingText}>Loading restaurant settings...</p>
+                  </div>
+                </Card.Body>
+              </Card>
+            ) : (
+              <Row>
+                <Col lg={8} xl={6}>
+                  <Card className={styles.settingsCard}>
+                    {/* Card Header */}
+                    <div className={styles.cardHeader}>
+                      <div className={styles.cardHeaderContent}>
+                        <div className={styles.cardHeaderLeft}>
+                          <FiHome className="text-white" size={20} />
+                          <h5 className={styles.cardHeaderTitle}>Restaurant Profile</h5>
+                        </div>
+
+                        {!editing && (
+                          <Button
+                            variant="outline-light"
+                            size="sm"
+                            onClick={() => setEditing(true)}
+                            className={styles.editButton}
+                          >
+                            <FiEdit2 size={14} />
+                            Edit
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <Card.Body className={styles.cardBody}>
+                      {!editing ? (
+                        /* Display Mode */
+                        <div className={styles.displaySection}>
+                          {/* Restaurant Name */}
+                          <div className={styles.fieldContainer}>
+                            <div className={`${styles.fieldIcon} ${styles.fieldIconBlue}`}>
+                              <FiHome className="text-info" size={18} />
+                            </div>
+                            <div className={styles.fieldContent}>
+                              <p className={styles.fieldLabel}>Restaurant Name</p>
+                              <h6 className={styles.fieldValue}>{form.name || "—"}</h6>
+                            </div>
+                          </div>
+
+                          {/* Username */}
+                          <div className={styles.fieldContainer}>
+                            <div className={`${styles.fieldIcon} ${styles.fieldIconGreen}`}>
+                              <FiHash className="text-success" size={18} />
+                            </div>
+                            <div className={styles.fieldContent}>
+                              <p className={styles.fieldLabel}>Username</p>
+                              <h6 className={styles.fieldValue}>@{form.username || "—"}</h6>
+                            </div>
+                          </div>
+
+                          {/* Location */}
+                          <div className={styles.fieldContainer}>
+                            <div className={`${styles.fieldIcon} ${styles.fieldIconYellow}`}>
+                              <FiMapPin className="text-warning" size={18} />
+                            </div>
+                            <div className={styles.fieldContent}>
+                              <p className={styles.fieldLabel}>Location</p>
+                              <h6 className={styles.fieldValue}>
+                                {form.location || "Not specified"}
+                              </h6>
+                            </div>
+                          </div>
+
+                          {/* Tax Rate */}
+                          <div className={styles.fieldContainer}>
+                            <div className={`${styles.fieldIcon} ${styles.fieldIconRed}`}>
+                              <FiPercent className="text-danger" size={18} />
+                            </div>
+                            <div className={styles.fieldContent}>
+                              <p className={styles.fieldLabel}>Tax Rate</p>
+                              <h6 className={styles.fieldValue}>{form.taxRatePercent}%</h6>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        /* Edit Mode */
+                        <Form onSubmit={handleSubmit} className={styles.formContainer}>
+                          <Row>
+                            <Col md={6}>
+                              <Form.Group className="mb-3">
+                                <Form.Label className={styles.formLabel}>
+                                  <FiHome />
+                                  Restaurant Name
+                                </Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  required
+                                  name="name"
+                                  value={form.name}
+                                  onChange={handleChange}
+                                  placeholder="Enter restaurant name"
+                                  className={styles.formInput}
+                                />
+                              </Form.Group>
+                            </Col>
+
+                            <Col md={6}>
+                              <Form.Group className="mb-3">
+                                <Form.Label className={styles.formLabel}>
+                                  <FiHash />
+                                  Username
+                                </Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  required
+                                  name="username"
+                                  value={form.username}
+                                  onChange={handleChange}
+                                  placeholder="Enter username"
+                                  className={styles.formInput}
+                                />
+                              </Form.Group>
+                            </Col>
+                          </Row>
+
+                          <Row>
+                            <Col md={8}>
+                              <Form.Group className="mb-3">
+                                <Form.Label className={styles.formLabel}>
+                                  <FiMapPin />
+                                  Location
+                                </Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  name="location"
+                                  value={form.location}
+                                  onChange={handleChange}
+                                  placeholder="Enter restaurant location"
+                                  className={styles.formInput}
+                                />
+                              </Form.Group>
+                            </Col>
+
+                            <Col md={4}>
+                              <Form.Group className="mb-3">
+                                <Form.Label className={styles.formLabel}>
+                                  <FiPercent />
+                                  Tax Rate (%)
+                                </Form.Label>
+                                <Form.Control
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  max="100"
+                                  name="taxRatePercent"
+                                  value={form.taxRatePercent}
+                                  onChange={handleChange}
+                                  placeholder="0.00"
+                                  className={styles.formInput}
+                                />
+                              </Form.Group>
+                            </Col>
+                          </Row>
+
+                          {/* Action Buttons */}
+                          <div className={styles.actionButtons}>
+                            <Button type="submit" disabled={saving} className={styles.saveButton}>
+                              {saving ? (
+                                <>
+                                  <Spinner animation="border" size="sm" />
+                                  Saving...
+                                </>
+                              ) : (
+                                <>
+                                  <FiSave size={16} />
+                                  Save Changes
+                                </>
+                              )}
+                            </Button>
+
+                            <Button
+                              variant="outline-secondary"
+                              onClick={handleCancel}
+                              disabled={saving}
+                              className={styles.cancelButton}
+                            >
+                              <FiX size={16} />
+                              Cancel
+                            </Button>
+                          </div>
+                        </Form>
+                      )}
+                    </Card.Body>
+                  </Card>
+
+                  {/* Success Indicator */}
+                  {!editing && lastUpdated && (
+                    <div className={styles.successIndicator}>
+                      <FiCheck size={16} />
+                      <span>Settings are up to date</span>
+                    </div>
+                  )}
+                </Col>
+              </Row>
+            )}
+          </Container>
+        </div>
       </ManagerOnly>
     </DashboardLayout>
   );

@@ -40,6 +40,7 @@ import {
   Filler,
 } from "chart.js";
 import { Line, Bar, Doughnut, Radar } from "react-chartjs-2";
+import styles from "./overview.module.css";
 
 // Register the new components:
 ChartJS.register(
@@ -62,8 +63,17 @@ export default function OverviewPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1200,
+  );
 
   const isManager = user?.role === "manager";
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const loadDashboardData = async () => {
     try {
@@ -89,16 +99,8 @@ export default function OverviewPage() {
 
   const SummaryCard = ({ icon, label, value, color, subtext, onClick, trend }) => (
     <div
-      style={{
-        backgroundColor: "#1E1E2F",
-        borderRadius: 12,
-        padding: "1.5rem",
-        border: `2px solid ${color}20`,
-        transition: "all 0.3s ease",
-        cursor: onClick ? "pointer" : "default",
-        position: "relative",
-        overflow: "hidden",
-      }}
+      className={`${styles.summaryCard} ${onClick ? styles.summaryCardClickable : ""}`}
+      style={{ border: `2px solid ${color}20` }}
       onClick={onClick}
       onMouseEnter={(e) => {
         if (onClick) {
@@ -115,52 +117,23 @@ export default function OverviewPage() {
         }
       }}
     >
-      <div
-        style={{
-          position: "absolute",
-          top: -20,
-          right: -20,
-          width: 60,
-          height: 60,
-          borderRadius: "50%",
-          backgroundColor: `${color}10`,
-          opacity: 0.5,
-        }}
-      />
+      <div className={styles.summaryCardBg} style={{ backgroundColor: `${color}10` }} />
 
-      <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}>
+      <div className={styles.summaryCardContent}>
         <div
-          style={{
-            backgroundColor: `${color}20`,
-            borderRadius: "50%",
-            padding: "1rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: color,
-            fontSize: "1.5rem",
-          }}
+          className={styles.summaryCardIcon}
+          style={{ backgroundColor: `${color}20`, color: color }}
         >
           {icon}
         </div>
 
-        <div style={{ flex: 1 }}>
-          <h3
-            style={{
-              margin: 0,
-              color: "#FFF",
-              fontSize: "1.8rem",
-              fontWeight: 600,
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
+        <div className={styles.summaryCardInfo}>
+          <h3 className={styles.summaryCardValue}>
             {value}
             {trend && (
               <span
+                className={styles.summaryCardTrend}
                 style={{
-                  fontSize: "0.8rem",
                   color: trend > 0 ? "#4CAF50" : trend < 0 ? "#F44336" : "#FF9800",
                 }}
               >
@@ -168,10 +141,8 @@ export default function OverviewPage() {
               </span>
             )}
           </h3>
-          <p style={{ margin: "0.25rem 0 0", color: "#CCC", fontSize: "0.9rem" }}>{label}</p>
-          {subtext && (
-            <p style={{ margin: "0.25rem 0 0", color: "#888", fontSize: "0.8rem" }}>{subtext}</p>
-          )}
+          <p className={styles.summaryCardLabel}>{label}</p>
+          {subtext && <p className={styles.summaryCardSubtext}>{subtext}</p>}
         </div>
       </div>
     </div>
@@ -179,15 +150,7 @@ export default function OverviewPage() {
 
   const QuickActionCard = ({ icon, title, description, onClick, color }) => (
     <div
-      style={{
-        backgroundColor: "#1E1E2F",
-        borderRadius: 12,
-        padding: "1.5rem",
-        border: "1px solid #3A3A4A",
-        cursor: "pointer",
-        transition: "all 0.3s ease",
-        height: "100%",
-      }}
+      className={styles.quickActionCard}
       onClick={onClick}
       onMouseEnter={(e) => {
         e.currentTarget.style.backgroundColor = "#252538";
@@ -200,81 +163,38 @@ export default function OverviewPage() {
         e.currentTarget.style.transform = "translateY(0)";
       }}
     >
-      <div
-        style={{
-          color: color,
-          fontSize: "2rem",
-          marginBottom: "1rem",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
+      <div className={styles.quickActionIcon} style={{ color: color }}>
         {icon}
       </div>
-      <h4 style={{ color: "#FFF", textAlign: "center", marginBottom: "0.5rem" }}>{title}</h4>
-      <p style={{ color: "#CCC", textAlign: "center", fontSize: "0.9rem", margin: 0 }}>
-        {description}
-      </p>
+      <h4 className={styles.quickActionTitle}>{title}</h4>
+      <p className={styles.quickActionDescription}>{description}</p>
     </div>
   );
 
   const AlertCard = ({ type, items, color, icon, title }) => (
-    <div
-      style={{
-        backgroundColor: "#1E1E2F",
-        borderRadius: 12,
-        padding: "1.5rem",
-        border: `2px solid ${color}30`,
-        marginBottom: "1rem",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
+    <div className={styles.alertCard} style={{ border: `2px solid ${color}30` }}>
+      <div className={styles.alertCardHeader}>
         <div
-          style={{
-            backgroundColor: `${color}20`,
-            borderRadius: "50%",
-            padding: "0.75rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: color,
-            fontSize: "1.2rem",
-          }}
+          className={styles.alertCardIcon}
+          style={{ backgroundColor: `${color}20`, color: color }}
         >
           {icon}
         </div>
-        <h4 style={{ margin: 0, color: "#FFF" }}>{title}</h4>
+        <h4 className={styles.alertCardTitle}>{title}</h4>
         <span
-          style={{
-            backgroundColor: `${color}20`,
-            color: color,
-            padding: "0.25rem 0.75rem",
-            borderRadius: 12,
-            fontSize: "0.8rem",
-            fontWeight: 600,
-          }}
+          className={styles.alertCardBadge}
+          style={{ backgroundColor: `${color}20`, color: color }}
         >
           {items.length}
         </span>
       </div>
 
       {items.length > 0 ? (
-        <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+        <div className={styles.alertCardContent}>
           {items.map((item, index) => (
-            <div
-              key={index}
-              style={{
-                padding: "0.5rem",
-                backgroundColor: "#252538",
-                borderRadius: 6,
-                marginBottom: "0.5rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <span style={{ color: "#FFF", fontSize: "0.9rem" }}>{item.name}</span>
-              <span style={{ color: "#CCC", fontSize: "0.8rem" }}>
+            <div key={index} className={styles.alertCardItem}>
+              <span className={styles.alertCardItemName}>{item.name}</span>
+              <span className={styles.alertCardItemInfo}>
                 {type === "orders"
                   ? `${item.timeAgo} min ago`
                   : `${item.quantity}/${item.threshold} ${item.unit}`}
@@ -283,7 +203,7 @@ export default function OverviewPage() {
           ))}
         </div>
       ) : (
-        <p style={{ color: "#888", textAlign: "center", margin: 0 }}>All good! 👍</p>
+        <p className={styles.alertCardEmpty}>All good! 👍</p>
       )}
     </div>
   );
@@ -292,39 +212,10 @@ export default function OverviewPage() {
     return (
       <Protected>
         <DashboardLayout>
-          <div
-            style={{
-              backgroundColor: "#121212",
-              minHeight: "100vh",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              color: "#FFF",
-            }}
-          >
-            <div style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  border: "3px solid #333",
-                  borderTop: "3px solid #4CAF50",
-                  borderRadius: "50%",
-                  animation: "spin 1s linear infinite",
-                  margin: "0 auto 1rem",
-                }}
-              />
+          <div className={styles.loadingContainer}>
+            <div className={styles.loadingContent}>
+              <div className={styles.loadingSpinner} />
               <p>Loading Dashboard...</p>
-              <style jsx>{`
-                @keyframes spin {
-                  0% {
-                    transform: rotate(0deg);
-                  }
-                  100% {
-                    transform: rotate(360deg);
-                  }
-                }
-              `}</style>
             </div>
           </div>
         </DashboardLayout>
@@ -382,63 +273,43 @@ export default function OverviewPage() {
     },
   };
 
-  const popularItemsData = data?.managerData?.popularItems?.length
-    ? {
-        labels: data.managerData.popularItems.map((item) => item.name),
-        datasets: [
-          {
-            data: data.managerData.popularItems.map((item) => item.quantity),
-            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
-          },
-        ],
-      }
-    : null;
-
   return (
     <Protected>
       <DashboardLayout>
-        <div style={{ padding: "1.5rem", color: "#FFF" }}>
+        <div className={styles.container}>
           {/* Header */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "2rem",
-            }}
-          >
-            <div>
-              <h1 style={{ margin: 0, fontSize: "2.5rem", fontWeight: 700 }}>
+          <div className={`${styles.header} ${windowWidth <= 768 ? styles.headerMobile : ""}`}>
+            <div className={styles.headerContent}>
+              <h1
+                className={`${styles.headerTitle} ${windowWidth <= 768 ? styles.headerTitleMobile : ""} ${windowWidth <= 480 ? styles.headerTitleSmall : ""}`}
+              >
                 {isManager ? "📊 Management Overview" : "👋 Staff Dashboard"}
               </h1>
-              <p style={{ color: "#CCC", margin: "0.5rem 0 0", fontSize: "1.1rem" }}>
+              <p
+                className={`${styles.headerSubtitle} ${windowWidth <= 768 ? styles.headerSubtitleMobile : ""}`}
+              >
                 {isManager
                   ? "Real-time insights and analytics"
                   : `Welcome back, ${user.firstName}!`}
               </p>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <div
+              className={`${styles.headerActions} ${windowWidth <= 768 ? styles.headerActionsMobile : ""} ${windowWidth <= 480 ? styles.headerActionsSmall : ""}`}
+            >
               {lastUpdated && (
-                <div style={{ color: "#888", fontSize: "0.9rem" }}>
+                <div
+                  className={`${styles.lastUpdated} ${windowWidth <= 768 ? styles.lastUpdatedMobile : ""} ${windowWidth <= 480 ? styles.lastUpdatedSmall : ""}`}
+                >
                   Last updated: {lastUpdated.toLocaleTimeString()}
                 </div>
               )}
               <button
                 onClick={loadDashboardData}
-                style={{
-                  backgroundColor: "#4CAF50",
-                  border: "none",
-                  borderRadius: 8,
-                  padding: "0.75rem 1rem",
-                  color: "#FFF",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                }}
+                className={`${styles.refreshButton} ${windowWidth <= 768 ? styles.refreshButtonMobile : ""}`}
               >
-                <FiRefreshCw /> Refresh
+                <FiRefreshCw size={windowWidth <= 768 ? 14 : 16} />
+                Refresh
               </button>
             </div>
           </div>
@@ -447,14 +318,7 @@ export default function OverviewPage() {
           {isManager && data?.managerData && (
             <>
               {/* Key Metrics */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                  gap: "1.5rem",
-                  marginBottom: "2rem",
-                }}
-              >
+              <div className={styles.keyMetricsGrid}>
                 <SummaryCard
                   icon={<FiDollarSign />}
                   label="Today's Sales"
@@ -503,57 +367,25 @@ export default function OverviewPage() {
               </div>
 
               {/* Charts Row */}
-              {/* Expanded Charts Section */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "2rem",
-                  marginBottom: "2rem",
-                }}
-              >
+              <div className={styles.chartsGrid}>
                 {/* Sales Trend Chart */}
-                <div
-                  style={{
-                    backgroundColor: "#1E1E2F",
-                    padding: "1.5rem",
-                    borderRadius: 12,
-                    border: "1px solid #3A3A4A",
-                  }}
-                >
+                <div className={styles.chartContainer}>
                   {salesTrendData ? (
-                    <div style={{ height: "300px" }}>
+                    <div className={styles.chartContent}>
                       <Line data={salesTrendData} options={salesTrendOptions} />
                     </div>
                   ) : (
-                    <div
-                      style={{
-                        height: "300px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#888",
-                      }}
-                    >
+                    <div className={styles.chartEmpty}>
                       <p>No sales data available</p>
                     </div>
                   )}
                 </div>
 
                 {/* Peak Hours Chart */}
-                <div
-                  style={{
-                    backgroundColor: "#1E1E2F",
-                    padding: "1.5rem",
-                    borderRadius: 12,
-                    border: "1px solid #3A3A4A",
-                  }}
-                >
-                  <h3 style={{ margin: "0 0 1rem", fontSize: "1rem", color: "#FFF" }}>
-                    Peak Hours This Week
-                  </h3>
+                <div className={styles.chartContainer}>
+                  <h3 className={styles.chartTitle}>Peak Hours This Week</h3>
                   {data?.managerData?.peakHoursChart?.length > 0 ? (
-                    <div style={{ height: "250px" }}>
+                    <div className={styles.chartContentSmall}>
                       <Bar
                         data={{
                           labels: Array.from({ length: 24 }, (_, i) =>
@@ -604,15 +436,7 @@ export default function OverviewPage() {
                       />
                     </div>
                   ) : (
-                    <div
-                      style={{
-                        height: "250px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#888",
-                      }}
-                    >
+                    <div className={styles.chartEmptySmall}>
                       <p>No peak hour data</p>
                     </div>
                   )}
@@ -620,28 +444,12 @@ export default function OverviewPage() {
               </div>
 
               {/* Second Row of Charts */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "2rem",
-                  marginBottom: "2rem",
-                }}
-              >
+              <div className={styles.secondChartsGrid}>
                 {/* Staff Performance Radar Chart */}
-                <div
-                  style={{
-                    backgroundColor: "#1E1E2F",
-                    padding: "1.5rem",
-                    borderRadius: 12,
-                    border: "1px solid #3A3A4A",
-                  }}
-                >
-                  <h3 style={{ margin: "0 0 1rem", fontSize: "1rem", color: "#FFF" }}>
-                    Staff Performance This Week
-                  </h3>
+                <div className={styles.chartContainer}>
+                  <h3 className={styles.chartTitle}>Staff Performance This Week</h3>
                   {data?.managerData?.staffPerformanceChart?.length > 0 ? (
-                    <div style={{ height: "250px" }}>
+                    <div className={styles.chartContentSmall}>
                       <Radar
                         data={{
                           labels: data.managerData.staffPerformanceChart.map(
@@ -677,34 +485,17 @@ export default function OverviewPage() {
                       />
                     </div>
                   ) : (
-                    <div
-                      style={{
-                        height: "250px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#888",
-                      }}
-                    >
+                    <div className={styles.chartEmptySmall}>
                       <p>No staff performance data</p>
                     </div>
                   )}
                 </div>
 
                 {/* Menu Performance Doughnut Chart */}
-                <div
-                  style={{
-                    backgroundColor: "#1E1E2F",
-                    padding: "1.5rem",
-                    borderRadius: 12,
-                    border: "1px solid #3A3A4A",
-                  }}
-                >
-                  <h3 style={{ margin: "0 0 1rem", fontSize: "1rem", color: "#FFF" }}>
-                    Top Menu Items (Last 7 Days - by Quantity)
-                  </h3>
+                <div className={styles.chartContainer}>
+                  <h3 className={styles.chartTitle}>Top Menu Items (Last 7 Days - by Quantity)</h3>
                   {data?.managerData?.menuPerformanceChart?.length > 0 ? (
-                    <div style={{ height: "250px" }}>
+                    <div className={styles.chartContentSmall}>
                       <Doughnut
                         data={{
                           labels: data.managerData.menuPerformanceChart.map((item) => item.name),
@@ -737,15 +528,7 @@ export default function OverviewPage() {
                       />
                     </div>
                   ) : (
-                    <div
-                      style={{
-                        height: "250px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#888",
-                      }}
-                    >
+                    <div className={styles.chartEmptySmall}>
                       <p>No menu performance data</p>
                     </div>
                   )}
@@ -753,21 +536,13 @@ export default function OverviewPage() {
               </div>
 
               {/* Third Row - Completion Time Chart */}
-              <div
-                style={{
-                  backgroundColor: "#1E1E2F",
-                  padding: "1.5rem",
-                  borderRadius: 12,
-                  border: "1px solid #3A3A4A",
-                  marginBottom: "2rem",
-                }}
-              >
-                <h3 style={{ margin: "0 0 1rem", fontSize: "1rem", color: "#FFF" }}>
+              <div className={styles.chartContainer}>
+                <h3 className={styles.chartTitle}>
                   Order Completion Times (Last 10 Orders) - Avg:{" "}
                   {data?.managerData?.completionTimeChart?.avgTime || 0} min
                 </h3>
                 {data?.managerData?.completionTimeChart?.times?.length > 0 ? (
-                  <div style={{ height: "200px" }}>
+                  <div className={styles.chartContentTiny}>
                     <Bar
                       data={{
                         labels: data.managerData.completionTimeChart.times.map(
@@ -815,15 +590,7 @@ export default function OverviewPage() {
                     />
                   </div>
                 ) : (
-                  <div
-                    style={{
-                      height: "200px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#888",
-                    }}
-                  >
+                  <div className={styles.chartEmptyTiny}>
                     <p>No completion time data available</p>
                   </div>
                 )}
@@ -831,74 +598,36 @@ export default function OverviewPage() {
 
               {/* Top Staff Performance */}
               {data.managerData.topStaff?.length > 0 && (
-                <div
-                  style={{
-                    backgroundColor: "#1E1E2F",
-                    padding: "1.5rem",
-                    borderRadius: 12,
-                    border: "1px solid #3A3A4A",
-                    marginBottom: "2rem",
-                  }}
-                >
-                  <h3
-                    style={{
-                      margin: "0 0 1rem",
-                      color: "#FFF",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    🏆 Top Performers This Week
-                  </h3>
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                      gap: "1rem",
-                    }}
-                  >
+                <div className={styles.sectionCard}>
+                  <h3 className={styles.sectionTitle}>🏆 Top Performers This Week</h3>
+                  <div className={styles.topStaffGrid}>
                     {data.managerData.topStaff.slice(0, 3).map((staff, index) => {
                       const colors = ["#FFD700", "#C0C0C0", "#CD7F32"];
                       const medals = ["🥇", "🥈", "🥉"];
                       return (
                         <div
                           key={index}
-                          style={{
-                            backgroundColor: "#252538",
-                            padding: "1rem",
-                            borderRadius: 8,
-                            border: `2px solid ${colors[index]}30`,
-                            textAlign: "center",
-                          }}
+                          className={styles.topStaffCard}
+                          style={{ border: `2px solid ${colors[index]}30` }}
                         >
-                          <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>
-                            {medals[index]}
-                          </div>
-                          <h4 style={{ margin: 0, color: "#FFF", fontSize: "1.1rem" }}>
-                            {staff.name}
-                          </h4>
-                          <p style={{ margin: "0.25rem 0", color: "#CCC", fontSize: "0.9rem" }}>
-                            @{staff.username}
-                          </p>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-around",
-                              marginTop: "0.5rem",
-                            }}
-                          >
-                            <div>
-                              <p style={{ margin: 0, color: colors[index], fontWeight: 600 }}>
+                          <div className={styles.topStaffMedal}>{medals[index]}</div>
+                          <h4 className={styles.topStaffName}>{staff.name}</h4>
+                          <p className={styles.topStaffUsername}>@{staff.username}</p>
+                          <div className={styles.topStaffStats}>
+                            <div className={styles.topStaffStat}>
+                              <p
+                                className={styles.topStaffStatValue}
+                                style={{ color: colors[index] }}
+                              >
                                 ${staff.sales}
                               </p>
-                              <p style={{ margin: 0, color: "#888", fontSize: "0.8rem" }}>Sales</p>
+                              <p className={styles.topStaffStatLabel}>Sales</p>
                             </div>
-                            <div>
-                              <p style={{ margin: 0, color: "#4CAF50", fontWeight: 600 }}>
+                            <div className={styles.topStaffStat}>
+                              <p className={styles.topStaffStatValue} style={{ color: "#4CAF50" }}>
                                 {staff.orders}
                               </p>
-                              <p style={{ margin: 0, color: "#888", fontSize: "0.8rem" }}>Orders</p>
+                              <p className={styles.topStaffStatLabel}>Orders</p>
                             </div>
                           </div>
                         </div>
@@ -909,23 +638,9 @@ export default function OverviewPage() {
               )}
 
               {/* Quick Actions for Managers */}
-              <div
-                style={{
-                  backgroundColor: "#1E1E2F",
-                  padding: "1.5rem",
-                  borderRadius: 12,
-                  border: "1px solid #3A3A4A",
-                  marginBottom: "2rem",
-                }}
-              >
-                <h3 style={{ margin: "0 0 1rem", color: "#FFF" }}>⚡ Quick Actions</h3>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                    gap: "1rem",
-                  }}
-                >
+              <div className={styles.sectionCard}>
+                <h3 className={styles.sectionTitle}>⚡ Quick Actions</h3>
+                <div className={styles.quickActionsGrid}>
                   <QuickActionCard
                     icon={<FiBarChart2 />}
                     title="View Analytics"
@@ -973,14 +688,7 @@ export default function OverviewPage() {
           {!isManager && (
             <>
               {/* Staff Quick Stats */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-                  gap: "1.5rem",
-                  marginBottom: "2rem",
-                }}
-              >
+              <div className={styles.staffQuickStatsGrid}>
                 <SummaryCard
                   icon={<FiShoppingCart />}
                   label="Orders Today"
@@ -1015,29 +723,17 @@ export default function OverviewPage() {
               </div>
 
               {/* Staff Quick Actions */}
-              <div
-                style={{
-                  backgroundColor: "#1E1E2F",
-                  padding: "1.5rem",
-                  borderRadius: 12,
-                  border: "1px solid #3A3A4A",
-                  marginBottom: "2rem",
-                }}
-              >
-                <h3 style={{ margin: "0 0 1rem", color: "#FFF" }}>🚀 Quick Actions</h3>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                    gap: "1rem",
-                  }}
-                >
+              <div className={styles.sectionCard}>
+                <h3 className={styles.sectionTitle}>🚀 Quick Actions</h3>
+                <div className={styles.quickActionsGrid}>
                   <QuickActionCard
                     icon={<FiShoppingCart />}
                     title="Place Order"
                     description="Create new customer order"
                     onClick={() =>
-                      router.push(`/${router.query.restaurantUsername}/dashboard/ordering`)
+                      router.push(
+                        `/${router.query.restaurantUsername}/dashboard/ordering/create-order`,
+                      )
                     }
                     color="#4CAF50"
                   />
@@ -1055,7 +751,7 @@ export default function OverviewPage() {
                     title="Active Orders"
                     description="View pending & in-progress orders"
                     onClick={() =>
-                      router.push(`/${router.query.restaurantUsername}/dashboard/ordering`)
+                      router.push(`/${router.query.restaurantUsername}/dashboard/ordering/active`)
                     }
                     color="#2196F3"
                   />
@@ -1075,55 +771,22 @@ export default function OverviewPage() {
 
               {/* Recent Orders for Staff */}
               {data?.staffData?.recentOrders?.length > 0 && (
-                <div
-                  style={{
-                    backgroundColor: "#1E1E2F",
-                    padding: "1.5rem",
-                    borderRadius: 12,
-                    border: "1px solid #3A3A4A",
-                    marginBottom: "2rem",
-                  }}
-                >
-                  <h3
-                    style={{
-                      margin: "0 0 1rem",
-                      color: "#FFF",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    📋 Your Recent Orders
-                  </h3>
-                  <div style={{ maxHeight: "300px", overflowY: "auto" }}>
+                <div className={styles.sectionCard}>
+                  <h3 className={styles.sectionTitle}>📋 Your Recent Orders</h3>
+                  <div className={styles.recentOrdersContent}>
                     {data.staffData.recentOrders.map((order) => (
-                      <div
-                        key={order._id}
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          padding: "1rem",
-                          backgroundColor: "#252538",
-                          borderRadius: 8,
-                          marginBottom: "0.5rem",
-                          border: "1px solid #3A3A4A",
-                        }}
-                      >
-                        <div>
-                          <p style={{ margin: 0, color: "#FFF", fontWeight: 600 }}>
-                            Order #{order._id.slice(-6)}
-                          </p>
-                          <p style={{ margin: "0.25rem 0 0", color: "#CCC", fontSize: "0.9rem" }}>
+                      <div key={order._id} className={styles.recentOrderItem}>
+                        <div className={styles.recentOrderLeft}>
+                          <p className={styles.recentOrderId}>Order #{order._id.slice(-6)}</p>
+                          <p className={styles.recentOrderDetails}>
                             {order.itemCount} items •{" "}
                             {new Date(order.createdAt).toLocaleDateString()}
                           </p>
                         </div>
-                        <div style={{ textAlign: "right" }}>
-                          <p style={{ margin: 0, color: "#4CAF50", fontWeight: 600 }}>
-                            ${order.total.toFixed(2)}
-                          </p>
+                        <div className={styles.recentOrderRight}>
+                          <p className={styles.recentOrderTotal}>${order.total.toFixed(2)}</p>
                           <span
+                            className={styles.recentOrderStatus}
                             style={{
                               backgroundColor:
                                 order.status === "fulfilled"
@@ -1137,10 +800,6 @@ export default function OverviewPage() {
                                   : order.status === "pending"
                                     ? "#FF9800"
                                     : "#F44336",
-                              padding: "0.25rem 0.5rem",
-                              borderRadius: 4,
-                              fontSize: "0.8rem",
-                              textTransform: "capitalize",
                             }}
                           >
                             {order.status}
@@ -1156,42 +815,15 @@ export default function OverviewPage() {
 
           {/* Unavailable Menu Items Alert for Staff */}
           {data?.unavailableMenuItems?.length > 0 && (
-            <div
-              style={{
-                backgroundColor: "#1E1E2F",
-                padding: "1.5rem",
-                borderRadius: 12,
-                border: "2px solid #FF980030",
-                marginBottom: "2rem",
-              }}
-            >
-              <h3
-                style={{
-                  margin: "0 0 1rem",
-                  color: "#FFF",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                }}
-              >
-                ⚠️ Unavailable Menu Items
-              </h3>
-              <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+            <div className={styles.unavailableCard}>
+              <h3 className={styles.sectionTitle}>⚠️ Unavailable Menu Items</h3>
+              <div className={styles.unavailableContent}>
                 {data.unavailableMenuItems.map((item, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      padding: "0.75rem",
-                      backgroundColor: "#252538",
-                      borderRadius: 6,
-                      marginBottom: "0.5rem",
-                      border: "1px solid #FF980030",
-                    }}
-                  >
-                    <p style={{ margin: 0, color: "#FFF", fontWeight: 600 }}>
+                  <div key={index} className={styles.unavailableItem}>
+                    <p className={styles.unavailableItemName}>
                       {item.itemName} ({item.variationName})
                     </p>
-                    <p style={{ margin: "0.25rem 0 0", color: "#FF9800", fontSize: "0.8rem" }}>
+                    <p className={styles.unavailableItemMissing}>
                       Missing: {item.missingIngredients.join(", ")}
                     </p>
                   </div>
@@ -1201,13 +833,7 @@ export default function OverviewPage() {
           )}
 
           {/* Alerts Section (Both Manager and Staff) */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: isManager ? "1fr 1fr 1fr" : "1fr 1fr",
-              gap: "1.5rem",
-            }}
-          >
+          <div className={styles.alertsGrid}>
             {/* Pending Orders Alert */}
             <AlertCard
               type="orders"
@@ -1240,58 +866,36 @@ export default function OverviewPage() {
 
           {/* Recent Completed Orders (Manager Only) */}
           {isManager && data?.managerData?.recentCompletedOrders?.length > 0 && (
-            <div
-              style={{
-                backgroundColor: "#1E1E2F",
-                padding: "1.5rem",
-                borderRadius: 12,
-                border: "1px solid #3A3A4A",
-                marginTop: "2rem",
-              }}
-            >
-              <h3
-                style={{
-                  margin: "0 0 1rem",
-                  color: "#FFF",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                }}
-              >
-                ✅ Recently Completed Orders
-              </h3>
-              <div style={{ display: "grid", gap: "0.5rem" }}>
+            <div className={styles.completedOrdersCard}>
+              <h3 className={styles.sectionTitle}>✅ Recently Completed Orders</h3>
+              <div className={styles.completedOrdersContent}>
                 {data.managerData.recentCompletedOrders.map((order) => (
                   <div
                     key={order._id}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      padding: "0.75rem 1rem",
-                      backgroundColor: "#252538",
-                      borderRadius: 6,
-                      border: "1px solid #4CAF5030",
-                    }}
+                    className={`${styles.completedOrderItem} ${windowWidth <= 768 ? styles.completedOrderItemMobile : ""}`}
                   >
-                    <div>
-                      <span style={{ color: "#FFF", fontWeight: 600 }}>
+                    <div className={styles.completedOrderLeft}>
+                      <span
+                        className={`${styles.completedOrderId} ${windowWidth <= 768 ? styles.completedOrderIdMobile : ""}`}
+                      >
                         Order #{order._id.slice(-6)}
                       </span>
-                      <span style={{ color: "#CCC", fontSize: "0.9rem", marginLeft: "1rem" }}>
+                      <span
+                        className={`${styles.completedOrderBy} ${windowWidth <= 768 ? styles.completedOrderByMobile : ""}`}
+                      >
                         by {order.placedBy?.firstName} {order.placedBy?.lastName}
                       </span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                      <span style={{ color: "#4CAF50", fontWeight: 600 }}>
-                        ${order.total.toFixed(2)}
-                      </span>
+                    <div
+                      className={`${styles.completedOrderRight} ${windowWidth <= 480 ? styles.completedOrderRightSmall : ""}`}
+                    >
+                      <span className={styles.completedOrderTotal}>${order.total.toFixed(2)}</span>
                       {order.completionTime && (
-                        <span style={{ color: "#FF9800", fontSize: "0.8rem" }}>
+                        <span className={styles.completedOrderTime}>
                           {order.completionTime} min
                         </span>
                       )}
-                      <span style={{ color: "#888", fontSize: "0.8rem" }}>
+                      <span className={styles.completedOrderTimestamp}>
                         {new Date(order.finishedOn).toLocaleTimeString()}
                       </span>
                     </div>

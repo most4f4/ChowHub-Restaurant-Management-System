@@ -161,7 +161,7 @@ ${aiInsights}
   return (
     <DashboardLayout>
       <ManagerOnly>
-        <div style={{ padding: "1rem", maxWidth: "calc(100vw - 260px)", overflow: "hidden" }}>
+        <div style={{ padding: "2rem", maxWidth: "calc(100vw - 260px)", overflow: "hidden" }}>
           <div style={{ marginBottom: "2rem" }}>
             <AnalyticsBackButton />
           </div>

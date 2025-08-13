@@ -8,6 +8,7 @@ import SummaryCard from "@/components/SummaryCard";
 import CategoryModal from "@/components/CategoryModal";
 import { Button, Modal, Pagination } from "react-bootstrap";
 import Style from "./menuManage.module.css";
+import DeleteCategoryModal from "@/components/DeleteCategoryModal";
 
 export default function MenuManagementPage() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function MenuManagementPage() {
   const [isEditing, setIsEditing] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); 
+  const [itemsPerPage] = useState(10);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,9 +43,7 @@ export default function MenuManagementPage() {
           categoryMap[cat._id] = cat.name;
         });
 
-        const rawItems = Array.isArray(itemRes.menuItems)
-          ? itemRes.menuItems
-          : [];
+        const rawItems = Array.isArray(itemRes.menuItems) ? itemRes.menuItems : [];
 
         const itemsWithCategoryNames = rawItems.map((item) => ({
           ...item,
@@ -53,7 +52,7 @@ export default function MenuManagementPage() {
 
         setCategories(catRes.categories || []);
         setMenuItems(itemsWithCategoryNames);
-        calculateStats(itemsWithCategoryNames); 
+        calculateStats(itemsWithCategoryNames);
       } catch (err) {
         console.error("Failed to load menu items or categories", err);
         setMenuItems([]);
@@ -64,7 +63,7 @@ export default function MenuManagementPage() {
     };
 
     fetchData();
-  }, []); 
+  }, []);
 
   async function loadItems() {
     try {
@@ -142,24 +141,12 @@ export default function MenuManagementPage() {
     setDeleteModalOpen(true);
   };
 
-  const handleDeleteCategoryConfirm = async (category) => {
-    setDeleteModalOpen(false);
-    try {
-      await apiFetch(`/categories/${category._id}`, {
-        method: "DELETE",
-      });
-      loadCategories(); // Reload categories list
-      loadItems(); // Reload menu items as category deletion might affect them
-    } catch (err) {
-      console.error("Delete category failed", err);
-    }
-  };
-
-  const handleDeleteMenuItem = async () => { 
-    if (!selectedMenuItem) return; 
+  const handleDeleteMenuItem = async () => {
+    if (!selectedMenuItem) return;
     setDeleteMenuModalOpen(false);
     try {
-      await apiFetch(`/menu-management/${selectedMenuItem._id}`, { // Use selectedMenuItem
+      await apiFetch(`/menu-management/${selectedMenuItem._id}`, {
+        // Use selectedMenuItem
         method: "DELETE",
       });
       loadItems(); // Reload menu items to update the table
@@ -168,252 +155,192 @@ export default function MenuManagementPage() {
     }
   };
 
+  const handleDeleteCategoryConfirm = async (category) => {
+    try {
+      await apiFetch(`/categories/${category._id}`, {
+        method: "DELETE",
+      });
+      loadCategories(); // Reload categories list
+      loadItems(); // Reload menu items as category deletion might affect them
+    } catch (err) {
+      console.error("Delete category failed", err);
+      // You might want to show an error message to the user here
+      alert("Failed to delete category. Please try again.");
+      throw err; // Re-throw so the modal can handle it
+    }
+  };
+
   return (
     <DashboardLayout>
       <ManagerOnly>
-        
-        <h1>🍔 Menu Management</h1>
+        <div className={Style.pageContainer}>
+          <h1 className={Style.pageTitle}>🍔 Menu Management</h1>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            margin: "1.5rem 0",
-            gap: "2rem",
-          }}
-        >
-          <div
-            style={{
-              flex: 1.5,
-              backgroundColor: "#1E1E2F",
-              padding: "1rem",
-              borderRadius: 8,
-            }}
-          >
-            <h3 style={{ color: "#FFF", marginBottom: "0.75rem" }}>Categories</h3>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ borderBottom: "1px solid #444", color: "#AAA" }}>
-                  <th style={{ textAlign: "left", paddingBottom: 8 }}>Category</th>
-                  <th style={{ textAlign: "right", paddingBottom: 8 }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categories.map((cat) => (
-                  <tr key={cat._id} style={{ borderBottom: "1px solid #333" }}>
-                    <td style={{ color: "#FFF", padding: "0.5rem 0" }}>{cat.name}</td>
-                    <td style={{ textAlign: "right" }}>
-                      <button
-                        onClick={() => handleDeleteCategory(cat)}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          color: "#4FC3F7",
-                        }}
-                      >
-                        ❌ Delete
-                      </button>
-                      <button
-                        onClick={() => handleEditCategory(cat)}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          color: "#4FC3F7",
-                        }}
-                      >
-                        ✏️ Edit
-                      </button>
-                    </td>
+          <div className={Style.mainContent}>
+            <div className={Style.categoriesSection}>
+              <h3 className={Style.sectionTitle}>📂 Categories</h3>
+              <table className={Style.categoryTable}>
+                <thead className={Style.categoryTableHeader}>
+                  <tr>
+                    <th className={Style.categoryTableHeaderCell}>Category</th>
+                    <th className={Style.categoryTableHeaderCellRight}>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {categories.map((cat) => (
+                    <tr key={cat._id} className={Style.categoryTableRow}>
+                      <td className={Style.categoryTableCell}>{cat.name}</td>
+                      <td className={Style.categoryTableCellRight}>
+                        <button
+                          onClick={() => handleDeleteCategory(cat)}
+                          className={`${Style.categoryActionButton} ${Style.deleteButton}`}
+                        >
+                          🗑️ Delete
+                        </button>
+                        <button
+                          onClick={() => handleEditCategory(cat)}
+                          className={Style.categoryActionButton}
+                        >
+                          ✏️ Edit
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
+              <button onClick={handleAddCategory} className={Style.addCategoryButton}>
+                ➕ Add Category
+              </button>
+            </div>
+
+            <div className={Style.summarySection}>
+              <SummaryCard label="Total Menu Items" value={menuItems.length} color="#4CAF50" />
+            </div>
+          </div>
+
+          <div className={Style.addMenuButtonContainer}>
             <button
-              onClick={handleAddCategory}
-              style={{
-                marginTop: "1rem",
-                backgroundColor: "#4CAF50",
-                color: "#FFF",
-                border: "none",
-                padding: "0.5rem 1rem",
-                borderRadius: 4,
-                cursor: "pointer",
-              }}
+              onClick={() => router.push(`/${restaurantUsername}/dashboard/menu-management/create`)}
+              className={Style.addMenuButton}
             >
-              ➕ Add Category
+              ➕ Add Menu Item
             </button>
           </div>
 
-          <div style={{ flex: 1 }}>
-            <SummaryCard label="Total Menu Items" value={menuItems.length} color="#4CAF50" />
+          <div className={Style.filterSection}>
+            <label htmlFor="category-filter" className={Style.filterLabel}>
+              🔍 Filter:
+            </label>
+            <select
+              id="category-filter"
+              value={selectedCategoryFilter}
+              onChange={(e) => {
+                setSelectedCategoryFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className={Style.filterSelect}
+            >
+              <option value="all">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+
+            <input
+              type="text"
+              placeholder="🔎 Search menu items by name..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className={Style.searchInput}
+            />
           </div>
-        </div>
 
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
-          <button
-            onClick={() =>
-              router.push(`/${restaurantUsername}/dashboard/menu-management/create`)
-            }
-            style={{
-              backgroundColor: "#388E3C",
-              color: "#FFF",
-              border: "none",
-              padding: "0.5rem 1.25rem",
-              borderRadius: 4,
-              fontSize: "1rem",
-              fontWeight: 700,
-              cursor: "pointer",
+          <MenuItemTable
+            items={currentItems}
+            restaurantUsername={restaurantUsername}
+            onDelete={(item) => {
+              setSelectedMenuItem(item);
+              setDeleteMenuModalOpen(true);
             }}
-          >
-            Add Menu Item +
-          </button>
-        </div>
-
-        <div
-          style={{ display: "flex", gap: "1rem", alignItems: "center", marginBottom: "1rem" }}
-        >
-          <label htmlFor="category-filter" style={{ color: "#FFF" }}>Filter:</label>
-          <select
-            id="category-filter"
-            value={selectedCategoryFilter}
-            onChange={(e) => {
-              setSelectedCategoryFilter(e.target.value);
-              setCurrentPage(1); 
-            }}
-            style={{
-              padding: "0.5rem 1rem",
-              borderRadius: 4,
-              border: "1px solid #3A3A4A",
-              backgroundColor: "#2A2A3A",
-              color: "#FFF",
-            }}
-          >
-            <option value="all">All</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat.name}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-
-          <input
-            type="text"
-            placeholder="Search menu items by name..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1); // Reset to first page on search change
-            }}
-            style={{
-              flex: 1,
-              padding: "0.5rem 1rem",
-              borderRadius: 4,
-              border: "1px solid #3A3A4A",
-              backgroundColor: "#2A2A3A",
-              color: "#FFF",
+            onEdit={(item) => {
+              router.push(`/${restaurantUsername}/dashboard/menu-management/edit/${item._id}`);
             }}
           />
-        </div>
 
-        <MenuItemTable
-          items={currentItems} 
-          restaurantUsername={restaurantUsername}
-          onDelete={(item) => {
-            setSelectedMenuItem(item);
-            setDeleteMenuModalOpen(true);
-          }}
-          onEdit={(item) => {
-            router.push(`/${restaurantUsername}/dashboard/menu-management/edit/${item._id}`);
-          }}
-        />
+          {totalFilteredItems > itemsPerPage && (
+            <div className={Style.paginationContainer}>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`${Style.paginationButton} ${
+                    currentPage === i + 1 ? Style.paginationButtonActive : ""
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+          )}
 
-        {totalFilteredItems > itemsPerPage && ( // Only show pagination if there's more than one page
-          <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => setCurrentPage(i + 1)}
-                style={{
-                  backgroundColor: currentPage === i + 1 ? "#388E3C" : "#2A2A3A",
-                  color: "#FFF",
-                  border: "none",
-                  padding: "0.5rem 1rem",
-                  margin: "0 0.25rem",
-                  borderRadius: 4,
-                  cursor: "pointer",
-                }}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-        )}
+          {modalOpen && (
+            <CategoryModal
+              open={modalOpen}
+              onClose={() => {
+                setModalOpen(false);
+                loadCategories();
+                loadItems();
+              }}
+              initialName={selectedCategory?.name || ""}
+              categoryId={selectedCategory?._id || null}
+              isEditing={isEditing}
+            />
+          )}
 
-
-        {modalOpen && (
-          <CategoryModal
-            open={modalOpen}
-            onClose={() => {
-              setModalOpen(false);
-              loadCategories();
-              loadItems(); 
-            }}
-            initialName={selectedCategory?.name || ""}
-            categoryId={selectedCategory?._id || null}
-            isEditing={isEditing}
+          {/* Delete Category Modal */}
+          <DeleteCategoryModal
+            show={deleteModalOpen}
+            onHide={() => setDeleteModalOpen(false)}
+            category={selectedCategory}
+            categories={categories}
+            onConfirmDelete={handleDeleteCategoryConfirm}
+            style={Style}
           />
-        )}
 
-        <Modal
-          contentClassName={Style.modalContent}
-          centered
-          show={deleteModalOpen}
-          onHide={() => setDeleteModalOpen(false)}
-        >
-          <Modal.Header className={Style.modalHeader}>
-            <Modal.Title>Delete Category</Modal.Title>
-          </Modal.Header>
-          <Modal.Body className={Style.modalBody}>
-            <p>
-              Are you sure you want to delete {selectedCategory != null ? selectedCategory.name : ""}.
-            </p>
-          </Modal.Body>
-          <Modal.Footer className={Style.modalFooter}>
-            <Button variant="secondary" onClick={() => setDeleteModalOpen(false)}>
-              Close
-            </Button>
-            <Button variant="danger" onClick={() => handleDeleteCategoryConfirm(selectedCategory)}>
-              Delete
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
-        <Modal
-          contentClassName={Style.modalContent}
-          centered
-          show={deleteMenuModalOpen}
-          onHide={() => setDeleteMenuModalOpen(false)}
-        >
-          <Modal.Header className={Style.modalHeader}>
-            <Modal.Title>Delete Menu Item</Modal.Title>
-          </Modal.Header>
-          <Modal.Body className={Style.modalBody}>
-            <p>
-              Are you sure you want to delete {selectedMenuItem != null ? selectedMenuItem.name : ""}.
-            </p>
-          </Modal.Body>
-          <Modal.Footer className={Style.modalFooter}>
-            <Button variant="secondary" onClick={() => setDeleteMenuModalOpen(false)}>
-              Close
-            </Button>
-            <Button variant="danger" onClick={handleDeleteMenuItem}>
-              Delete
-            </Button>
-          </Modal.Footer>
-        </Modal>
+          {/* Delete Menu Item Modal */}
+          <Modal
+            contentClassName={Style.modalContent}
+            centered
+            show={deleteMenuModalOpen}
+            onHide={() => setDeleteMenuModalOpen(false)}
+          >
+            <Modal.Header className={Style.modalHeader}>
+              <Modal.Title>🗑️ Delete Menu Item</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className={Style.modalBody}>
+              <p>
+                Are you sure you want to delete <strong>{selectedMenuItem?.name}</strong>?
+              </p>
+              <p style={{ color: "#ff6b6b", fontSize: "0.9rem", marginTop: "1rem" }}>
+                ⚠️ This action cannot be undone.
+              </p>
+            </Modal.Body>
+            <Modal.Footer className={Style.modalFooter}>
+              <Button variant="secondary" onClick={() => setDeleteMenuModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button variant="danger" onClick={handleDeleteMenuItem}>
+                Delete Menu Item
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
       </ManagerOnly>
     </DashboardLayout>
   );
