@@ -50,7 +50,7 @@ export default function SalesAnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState({
     startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0], // 30 days ago
-    endDate: new Date().toISOString().split("T")[0], // Today
+    endDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0], // Today
   });
 
   const loadSalesData = async () => {
