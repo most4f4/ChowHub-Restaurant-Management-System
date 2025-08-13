@@ -731,7 +731,9 @@ export default function OverviewPage() {
                     title="Place Order"
                     description="Create new customer order"
                     onClick={() =>
-                      router.push(`/${router.query.restaurantUsername}/dashboard/ordering`)
+                      router.push(
+                        `/${router.query.restaurantUsername}/dashboard/ordering/create-order`,
+                      )
                     }
                     color="#4CAF50"
                   />
@@ -749,7 +751,7 @@ export default function OverviewPage() {
                     title="Active Orders"
                     description="View pending & in-progress orders"
                     onClick={() =>
-                      router.push(`/${router.query.restaurantUsername}/dashboard/ordering`)
+                      router.push(`/${router.query.restaurantUsername}/dashboard/ordering/active`)
                     }
                     color="#2196F3"
                   />

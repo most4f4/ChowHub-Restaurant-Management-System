@@ -79,17 +79,15 @@ export default function DashboardHeader() {
             path: `/${restaurantUsername}/dashboard/sales-analytics`,
             color: "#ffecd2",
           },
+          {
+            icon: <FiSettings size={16} />,
+            label: user?.role === "manager" ? "Restaurant Settings" : "View Settings",
+            description: user?.role === "manager" ? "Manage restaurant" : "View restaurant info",
+            path: `/${restaurantUsername}/dashboard/restaurant-settings`,
+            color: "#d299c2",
+          },
         ]
       : []),
-
-    // Settings (available to all)
-    {
-      icon: <FiSettings size={16} />,
-      label: user?.role === "manager" ? "Restaurant Settings" : "View Settings",
-      description: user?.role === "manager" ? "Manage restaurant" : "View restaurant info",
-      path: `/${restaurantUsername}/dashboard/restaurant-settings`,
-      color: "#d299c2",
-    },
   ];
 
   // Close dropdown when clicking outside

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
 import { apiFetch } from "@/lib/api";
 import { Form, Button, Container, Row, Col, Card, Badge, Spinner } from "react-bootstrap";
@@ -24,6 +24,7 @@ import {
 export default function RestaurantSettings() {
   const router = useRouter();
   const user = useAtomValue(userAtom);
+  const setUser = useSetAtom(userAtom);
   const isManager = user?.role === "manager";
 
   const [form, setForm] = useState({
@@ -76,6 +77,20 @@ export default function RestaurantSettings() {
         body: JSON.stringify(form),
       });
       toast.success("✅ Restaurant profile updated successfully!");
+
+      setUser((prevUser) => ({
+        ...prevUser,
+        restaurantName: form.name,
+      }));
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...user,
+          restaurantName: form.name,
+        }),
+      );
+
       setEditing(false);
       setLastUpdated(new Date().toISOString());
     } catch (err) {

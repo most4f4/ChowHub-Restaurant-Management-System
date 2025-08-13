@@ -157,12 +157,25 @@ export default function CreateEmployeeForm() {
                       className={styles.employeeLabel}
                     />
                   </Form.Group>
+                  {/* Phone Number */}
+                  <Form.Group className="mb-3" controlId="formPhone">
+                    <Form.Label>📱 Phone Number</Form.Label>
+                    <Form.Control
+                      type="tel"
+                      placeholder="Enter phone number"
+                      required
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      className={styles.employeeLabel}
+                    />
+                  </Form.Group>
 
                   {/* Emergency Contact */}
                   <Form.Group className="mb-3" controlId="formEmergencyContact">
                     <Form.Label>🚨 Emergency Contact</Form.Label>
                     <Form.Control
-                      type="text"
+                      type="tel"
                       placeholder="Enter emergency contact number"
                       required
                       name="emergencyContact"

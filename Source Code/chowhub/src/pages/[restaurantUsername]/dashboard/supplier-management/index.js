@@ -4,6 +4,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { ManagerOnly } from "@/components/Protected";
 import SupplierTable from "@/components/SupplierTable";
 import { apiFetch } from "@/lib/api";
+import SummaryCard from "@/components/SummaryCard";
 import { Modal, Button, Form, InputGroup, Row, Col, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useAtomValue, getDefaultStore } from "jotai";
@@ -212,23 +213,9 @@ export default function SupplierManagementPage() {
           {(!loading || suppliers.length > 0) && !error && (
             <>
               {/* Summary Section */}
+              {/* Summary Section */}
               <div className={styles.summarySection}>
-                <div className={styles.summaryCard}>
-                  <div className={styles.summaryCardValue}>{totalItems}</div>
-                  <div className={styles.summaryCardLabel}>Total Suppliers</div>
-                </div>
-                <div className={styles.summaryCard}>
-                  <div className={styles.summaryCardValue}>
-                    {suppliers.filter((s) => s.status === "active").length}
-                  </div>
-                  <div className={styles.summaryCardLabel}>Active Suppliers</div>
-                </div>
-                <div className={styles.summaryCard}>
-                  <div className={styles.summaryCardValue}>
-                    {new Set(suppliers.map((s) => s.category)).size}
-                  </div>
-                  <div className={styles.summaryCardLabel}>Categories</div>
-                </div>
+                <SummaryCard label="Total Suppliers" value={totalItems} color="#4dabf7" />
               </div>
 
               {/* Action Bar */}
