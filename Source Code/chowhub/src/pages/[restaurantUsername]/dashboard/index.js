@@ -194,9 +194,14 @@ export default function OverviewPage() {
           {items.map((item, index) => (
             <div key={index} className={styles.alertCardItem}>
               <span className={styles.alertCardItemName}>{item.name}</span>
+              <span className={styles.alertCardItemName}>
+                {type === "orders"
+                  ? `Order #${item._id?.slice(-6) || "Unknown"} - $${item.total?.toFixed(2) || "0.00"}`
+                  : item.name}
+              </span>
               <span className={styles.alertCardItemInfo}>
                 {type === "orders"
-                  ? `${item.timeAgo} min ago`
+                  ? `${item.timeAgo} min ago${item.placedBy ? ` by ${item.placedBy.firstName}` : ""}`
                   : `${item.quantity}/${item.threshold} ${item.unit}`}
               </span>
             </div>
