@@ -2,12 +2,12 @@
 
 ## 📋 Table of Contents
 
-- [Installation Instructions](#installation-instructions)
-- [Test Account Access](#test-account-access)
-- [Deviations from PRJ566](#deviations-from-prj566)
-- [System Features & Functionalities](#system-features--functionalities)
-- [Technology Stack](#technology-stack)
-- [Contact](#contact)
+- [Installation Instructions](#-installation-instructions)
+- [Test Account Access](#-test-account-access)
+- [Deviations from PRJ566](#-deviations-from-prj566)
+- [System Features & Functionalities](#-system-features--functionalities)
+- [Technology Stack](#-technology-stack)
+- [Contact](#-contact)
 
 ## 🚀 Installation Instructions
 
